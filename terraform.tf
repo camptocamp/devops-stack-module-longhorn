@@ -8,5 +8,9 @@ terraform {
       source  = "cloudposse/utils"
       version = ">= 1"
     }
+    random = {
+      source  = "random"
+      version = ">= 3"
+    }
   }
 }

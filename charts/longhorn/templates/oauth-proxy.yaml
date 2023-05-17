@@ -1,0 +1,63 @@
+{{- if $.Values.ingress.enabled -}}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-oauth-proxy
+  labels:
+    app: oauth2-proxy
+    component: {{ $.Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: oauth2-proxy
+      component: {{ $.Release.Name }}
+  replicas: {{ default 1 $.Values.oidc.replicas }}
+  template:
+    metadata:
+      labels:
+        app: oauth2-proxy
+        component: {{ $.Release.Name }}
+    spec:
+      containers:
+      - image: quay.io/oauth2-proxy/oauth2-proxy:latest
+        imagePullPolicy: Always
+        name: oauth2-proxy
+        args:
+          - "--http-address=0.0.0.0:4180"
+          - "--upstream=http://longhorn-frontend.longhorn-system.svc:80"
+          - "--provider=oidc"
+          - {{ printf "--oidc-issuer-url=%s" $.Values.oidc.issuer_url | quote }}
+          - "--client-id=$(client_id)"
+          - "--client-secret=$(client_secret)"
+          - "--cookie-secret=$(cookie_secret)"
+          - "--cookie-secure=true"
+          - "--cookie-refresh=5m"
+          - "--email-domain=*"
+          - {{ printf "--redirect-url=%s" $.Values.oidc.redirect_url | quote }}
+          {{- range $.Values.oidc.oauth2_proxy_extra_args }}
+          - {{ . | quote }}
+          {{- end }}
+        env:
+          - name: client_id
+            valueFrom:
+              secretKeyRef:
+                name: {{ $.Release.Name }}-oauth-config
+                key: oauth_client_id
+          - name: client_secret
+            valueFrom:
+              secretKeyRef:
+                name: {{ $.Release.Name }}-oauth-config
+                key: oauth_client_secret
+          - name: cookie_secret
+            valueFrom:
+              secretKeyRef:
+                name: {{ $.Release.Name }}-oauth-config
+                key: oauth_cookie_secret
+        ports:
+          - containerPort: 4180
+            name: web
+            protocol: TCP
+
+{{- end -}}
