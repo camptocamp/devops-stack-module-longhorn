@@ -60,11 +60,15 @@ The following requirements are needed by this module:
 
 - [[requirement_argocd]] <<requirement_argocd,argocd>> (>= 4)
 
+- [[requirement_random]] <<requirement_random,random>> (>= 3)
+
 - [[requirement_utils]] <<requirement_utils,utils>> (>= 1)
 
 === Providers
 
 The following providers are used by this module:
+
+- [[provider_random]] <<provider_random,random>> (>= 3)
 
 - [[provider_null]] <<provider_null,null>>
 
@@ -80,6 +84,7 @@ The following resources are used by this module:
 - https://registry.terraform.io/providers/oboukili/argocd/latest/docs/resources/project[argocd_project.this] (resource)
 - https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.dependencies] (resource)
 - https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.this] (resource)
+- https://registry.terraform.io/providers/random/latest/docs/resources/string[random_string.cookie_secret] (resource)
 - https://registry.terraform.io/providers/cloudposse/utils/latest/docs/data-sources/deep_merge_yaml[utils_deep_merge_yaml.values] (data source)
 
 === Optional Inputs
@@ -132,7 +137,7 @@ Description: Namespace where the applications's Kubernetes resources should be c
 
 Type: `string`
 
-Default: `"<NAMESPACE>"`
+Default: `"longhorn-system"`
 
 ==== [[input_helm_values]] <<input_helm_values,helm_values>>
 
@@ -174,6 +179,42 @@ Type: `map(string)`
 
 Default: `{}`
 
+==== [[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
+
+Description: Enable the deployment of a service monitor.
+
+Type: `bool`
+
+Default: `false`
+
+==== [[input_enable_dashboard_ingress]] <<input_enable_dashboard_ingress,enable_dashboard_ingress>>
+
+Description: Enable the creation of an ingress for the Longhorn's dashboard.
+
+Type: `bool`
+
+Default: `false`
+
+==== [[input_oidc]] <<input_oidc,oidc>>
+
+Description: OIDC settings configure Oauth2-Proxy which will be use to protect Longhorn's dashboard.
+
+Type:
+[source,hcl]
+----
+object({
+    enabled                 = bool
+    issuer_url              = string
+    redirect_url            = string
+    client_id               = string
+    client_secret           = string
+    cookie_secret           = optional(string, "")
+    oauth2_proxy_extra_args = optional(list(string))
+  })
+----
+
+Default: `null`
+
 === Outputs
 
 The following outputs are exported:
@@ -195,6 +236,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |===
 |Name |Version
 |[[requirement_argocd]] <<requirement_argocd,argocd>> |>= 4
+|[[requirement_random]] <<requirement_random,random>> |>= 3
 |[[requirement_utils]] <<requirement_utils,utils>> |>= 1
 |===
 
@@ -203,9 +245,10 @@ Description: ID to pass other modules in order to refer to this module as a depe
 [cols="a,a",options="header,autowidth"]
 |===
 |Name |Version
-|[[provider_null]] <<provider_null,null>> |n/a
+|[[provider_random]] <<provider_random,random>> |>= 3
 |[[provider_utils]] <<provider_utils,utils>> |>= 1
 |[[provider_argocd]] <<provider_argocd,argocd>> |>= 4
+|[[provider_null]] <<provider_null,null>> |n/a
 |===
 
 = Resources
@@ -217,6 +260,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |https://registry.terraform.io/providers/oboukili/argocd/latest/docs/resources/project[argocd_project.this] |resource
 |https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.dependencies] |resource
 |https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.this] |resource
+|https://registry.terraform.io/providers/random/latest/docs/resources/string[random_string.cookie_secret] |resource
 |https://registry.terraform.io/providers/cloudposse/utils/latest/docs/data-sources/deep_merge_yaml[utils_deep_merge_yaml.values] |data source
 |===
 
@@ -258,7 +302,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |[[input_namespace]] <<input_namespace,namespace>>
 |Namespace where the applications's Kubernetes resources should be created. Namespace will be created in case it doesn't exist.
 |`string`
-|`"<NAMESPACE>"`
+|`"longhorn-system"`
 |no
 
 |[[input_helm_values]] <<input_helm_values,helm_values>>
@@ -297,6 +341,38 @@ object({
 |IDs of the other modules on which this module depends on.
 |`map(string)`
 |`{}`
+|no
+
+|[[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
+|Enable the deployment of a service monitor.
+|`bool`
+|`false`
+|no
+
+|[[input_enable_dashboard_ingress]] <<input_enable_dashboard_ingress,enable_dashboard_ingress>>
+|Enable the creation of an ingress for the Longhorn's dashboard.
+|`bool`
+|`false`
+|no
+
+|[[input_oidc]] <<input_oidc,oidc>>
+|OIDC settings configure Oauth2-Proxy which will be use to protect Longhorn's dashboard.
+|
+
+[source]
+----
+object({
+    enabled                 = bool
+    issuer_url              = string
+    redirect_url            = string
+    client_id               = string
+    client_secret           = string
+    cookie_secret           = optional(string, "")
+    oauth2_proxy_extra_args = optional(list(string))
+  })
+----
+
+|`null`
 |no
 
 |===
