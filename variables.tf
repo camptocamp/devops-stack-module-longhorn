@@ -90,8 +90,8 @@ variable "oidc" {
     api_url                 = string
     client_id               = string
     client_secret           = string
-    oauth2_proxy_extra_args = list(string)
+    oauth2_proxy_extra_args = optional(list(string), [])
   })
 
-  default = {}
+  default = null
 }
