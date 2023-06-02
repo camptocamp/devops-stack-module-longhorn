@@ -1,11 +1,12 @@
 locals {
-  domain              = format("longhorn.apps.%s", var.base_domain)
-  domain_with_cluster = format("longhorn.apps.%s.%s", var.cluster_name, var.base_domain)
+  domain      = format("longhorn.apps.%s", var.base_domain)
+  domain_full = format("longhorn.apps.%s.%s", var.cluster_name, var.base_domain)
 
   helm_values = [{
-    oidc = {
+    oidc = var.oidc != null ? {
+      oauth2_proxy_image      = "quay.io/oauth2-proxy/oauth2-proxy:7.4.0"
       issuer_url              = var.oidc.issuer_url
-      redirect_url            = format("https://%s/oauth2/callback", local.hostname_withclustername)
+      redirect_url            = format("https://%s/oauth2/callback", local.domain_full)
       client_id               = var.oidc.client_id
       client_secret           = var.oidc.client_secret
       cookie_secret           = resource.random_string.oauth2_cookie_secret.result
@@ -15,7 +16,7 @@ locals {
       enabled = var.enable_dashboard_ingress
       hosts = [
         local.domain,
-        local.domain_with_cluster
+        local.domain_full
       ]
       annotations = {
         "cert-manager.io/cluster-issuer"                   = "${var.cluster_issuer}"

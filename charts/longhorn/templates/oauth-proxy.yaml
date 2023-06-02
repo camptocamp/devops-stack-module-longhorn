@@ -21,7 +21,7 @@ spec:
         component: {{ $.Release.Name }}
     spec:
       containers:
-      - image: quay.io/oauth2-proxy/oauth2-proxy:latest
+      - image: {{ $.Values.oidc.oauth2_proxy_image }}
         imagePullPolicy: Always
         name: oauth2-proxy
         args:
