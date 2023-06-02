@@ -70,11 +70,11 @@ The following providers are used by this module:
 
 - [[provider_random]] <<provider_random,random>> (>= 3)
 
-- [[provider_utils]] <<provider_utils,utils>> (>= 1)
+- [[provider_null]] <<provider_null,null>>
 
 - [[provider_argocd]] <<provider_argocd,argocd>> (>= 4)
 
-- [[provider_null]] <<provider_null,null>>
+- [[provider_utils]] <<provider_utils,utils>> (>= 1)
 
 === Resources
 
@@ -84,7 +84,7 @@ The following resources are used by this module:
 - https://registry.terraform.io/providers/oboukili/argocd/latest/docs/resources/project[argocd_project.this] (resource)
 - https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.dependencies] (resource)
 - https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.this] (resource)
-- https://registry.terraform.io/providers/random/latest/docs/resources/string[random_string.cookie_secret] (resource)
+- https://registry.terraform.io/providers/random/latest/docs/resources/string[random_string.oauth2_cookie_secret] (resource)
 - https://registry.terraform.io/providers/cloudposse/utils/latest/docs/data-sources/deep_merge_yaml[utils_deep_merge_yaml.values] (data source)
 
 === Optional Inputs
@@ -181,7 +181,7 @@ Default: `{}`
 
 ==== [[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
 
-Description: Enable the deployment of a service monitor.
+Description: Boolean to enable the deployment of a service monitor.
 
 Type: `bool`
 
@@ -189,7 +189,7 @@ Default: `false`
 
 ==== [[input_enable_dashboard_ingress]] <<input_enable_dashboard_ingress,enable_dashboard_ingress>>
 
-Description: Enable the creation of an ingress for the Longhorn's dashboard.
+Description: Boolean to enable the creation of an ingress for the Longhorn's dashboard. **If enabled, you must provide a value for `base_domain`.**
 
 Type: `bool`
 
@@ -197,19 +197,19 @@ Default: `false`
 
 ==== [[input_oidc]] <<input_oidc,oidc>>
 
-Description: OIDC settings configure Oauth2-Proxy which will be use to protect Longhorn's dashboard.
+Description: OIDC settings to configure OAuth2-Proxy which will be used to protect Longhorn's dashboard.
 
 Type:
 [source,hcl]
 ----
 object({
-    enabled                 = bool
     issuer_url              = string
-    redirect_url            = string
+    oauth_url               = string
+    token_url               = string
+    api_url                 = string
     client_id               = string
     client_secret           = string
-    cookie_secret           = optional(string, "")
-    oauth2_proxy_extra_args = optional(list(string))
+    oauth2_proxy_extra_args = optional(list(string), [])
   })
 ----
 
@@ -260,7 +260,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |https://registry.terraform.io/providers/oboukili/argocd/latest/docs/resources/project[argocd_project.this] |resource
 |https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.dependencies] |resource
 |https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.this] |resource
-|https://registry.terraform.io/providers/random/latest/docs/resources/string[random_string.cookie_secret] |resource
+|https://registry.terraform.io/providers/random/latest/docs/resources/string[random_string.oauth2_cookie_secret] |resource
 |https://registry.terraform.io/providers/cloudposse/utils/latest/docs/data-sources/deep_merge_yaml[utils_deep_merge_yaml.values] |data source
 |===
 
@@ -344,31 +344,31 @@ object({
 |no
 
 |[[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
-|Enable the deployment of a service monitor.
+|Boolean to enable the deployment of a service monitor.
 |`bool`
 |`false`
 |no
 
 |[[input_enable_dashboard_ingress]] <<input_enable_dashboard_ingress,enable_dashboard_ingress>>
-|Enable the creation of an ingress for the Longhorn's dashboard.
+|Boolean to enable the creation of an ingress for the Longhorn's dashboard. **If enabled, you must provide a value for `base_domain`.**
 |`bool`
 |`false`
 |no
 
 |[[input_oidc]] <<input_oidc,oidc>>
-|OIDC settings configure Oauth2-Proxy which will be use to protect Longhorn's dashboard.
+|OIDC settings to configure OAuth2-Proxy which will be used to protect Longhorn's dashboard.
 |
 
 [source]
 ----
 object({
-    enabled                 = bool
     issuer_url              = string
-    redirect_url            = string
+    oauth_url               = string
+    token_url               = string
+    api_url                 = string
     client_id               = string
     client_secret           = string
-    cookie_secret           = optional(string, "")
-    oauth2_proxy_extra_args = optional(list(string))
+    oauth2_proxy_extra_args = optional(list(string), [])
   })
 ----
 
