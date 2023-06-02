@@ -32,17 +32,6 @@ locals {
   }]
 }
 
-
-/*
-│ Error: Attempt to get attribute from null value
-│ 
-│   on ../../devops-stack-module-longhorn/locals.tf line 38, in resource "random_string" "cookie_secret":
-│   38:   count   = var.oidc.cookie_secret != "" ? 0 : 1
-│     ├────────────────
-│     │ var.oidc is null
-│ 
-│ This value is null, so it does not have any attributes.
-*/
 resource "random_string" "oauth2_cookie_secret" {
   length  = 32
   special = false
