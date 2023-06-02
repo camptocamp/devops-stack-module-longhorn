@@ -10,7 +10,7 @@ locals {
       client_secret           = var.oidc.client_secret
       cookie_secret           = resource.random_string.oauth2_cookie_secret.result
       oauth2_proxy_extra_args = var.oidc.oauth2_proxy_extra_args
-    }
+    } : null
     ingress = {
       enabled = var.enable_dashboard_ingress
       hosts = [
