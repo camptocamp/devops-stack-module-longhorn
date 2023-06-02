@@ -1,23 +1,21 @@
 locals {
-  hostname                 = format("longhorn.apps.%s", var.base_domain)
-  hostname_withclustername = format("longhorn.apps.%s.%s", var.cluster_name, var.base_domain)
+  domain              = format("longhorn.apps.%s", var.base_domain)
+  domain_with_cluster = format("longhorn.apps.%s.%s", var.cluster_name, var.base_domain)
+
   helm_values = [{
     oidc = {
-      issuer_url    = var.oidc.issuer_url
-      redirect_url  = var.oidc.redirect_url
-      client_id     = var.oidc.client_id
-      client_secret = var.oidc.client_secret
-      cookie_secret = var.oidc.cookie_secret != "" ? var.oidc.cookie_secret : random_string.cookie_secret.0.result
-      oauth2_proxy_extra_args = var.cluster_issuer == "ca-issuer" || var.cluster_issuer == "letsencrypt-staging" ? [
-        "--insecure-oidc-skip-issuer-verification=true",
-        "--ssl-insecure-skip-verify=true",
-      ] : []
+      issuer_url              = var.oidc.issuer_url
+      redirect_url            = format("https://%s/oauth2/callback", local.hostname_withclustername)
+      client_id               = var.oidc.client_id
+      client_secret           = var.oidc.client_secret
+      cookie_secret           = resource.random_string.oauth2_cookie_secret.result
+      oauth2_proxy_extra_args = var.oidc.oauth2_proxy_extra_args
     }
     ingress = {
       enabled = var.enable_dashboard_ingress
       hosts = [
-        local.hostname,
-        local.hostname_withclustername
+        local.domain,
+        local.domain_with_cluster
       ]
       annotations = {
         "cert-manager.io/cluster-issuer"                   = "${var.cluster_issuer}"
@@ -34,8 +32,18 @@ locals {
   }]
 }
 
-resource "random_string" "cookie_secret" {
-  count   = var.oidc.cookie_secret != "" ? 0 : 1
-  length  = 24
+
+/*
+│ Error: Attempt to get attribute from null value
+│ 
+│   on ../../devops-stack-module-longhorn/locals.tf line 38, in resource "random_string" "cookie_secret":
+│   38:   count   = var.oidc.cookie_secret != "" ? 0 : 1
+│     ├────────────────
+│     │ var.oidc is null
+│ 
+│ This value is null, so it does not have any attributes.
+*/
+resource "random_string" "oauth2_cookie_secret" {
+  length  = 32
   special = false
 }
