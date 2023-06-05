@@ -4,7 +4,7 @@ locals {
 
   helm_values = [{
     oidc = var.oidc != null ? {
-      oauth2_proxy_image      = "quay.io/oauth2-proxy/oauth2-proxy:7.4.0"
+      oauth2_proxy_image      = "quay.io/oauth2-proxy/oauth2-proxy:v7.4.0"
       issuer_url              = var.oidc.issuer_url
       redirect_url            = format("https://%s/oauth2/callback", local.domain_full)
       client_id               = var.oidc.client_id
