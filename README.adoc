@@ -70,11 +70,11 @@ The following providers are used by this module:
 
 - [[provider_random]] <<provider_random,random>> (>= 3)
 
-- [[provider_null]] <<provider_null,null>>
-
 - [[provider_utils]] <<provider_utils,utils>> (>= 1)
 
 - [[provider_argocd]] <<provider_argocd,argocd>> (>= 4)
+
+- [[provider_null]] <<provider_null,null>>
 
 === Resources
 
@@ -178,6 +178,14 @@ Description: IDs of the other modules on which this module depends on.
 Type: `map(string)`
 
 Default: `{}`
+
+==== [[input_storage_over_provisioning_percentage]] <<input_storage_over_provisioning_percentage,storage_over_provisioning_percentage>>
+
+Description: Set default over-provisioning percentage.
+
+Type: `number`
+
+Default: `200`
 
 ==== [[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
 
@@ -341,6 +349,12 @@ object({
 |IDs of the other modules on which this module depends on.
 |`map(string)`
 |`{}`
+|no
+
+|[[input_storage_over_provisioning_percentage]] <<input_storage_over_provisioning_percentage,storage_over_provisioning_percentage>>
+|Set default over-provisioning percentage.
+|`number`
+|`200`
 |no
 
 |[[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
