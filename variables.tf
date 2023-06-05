@@ -68,6 +68,12 @@ variable "dependency_ids" {
 ## Module variables
 #######################
 
+variable "storage_over_provisioning_percentage" {
+  description = "Set default over-provisioning percentage."
+  type        = number
+  default     = 200
+}
+
 variable "enable_service_monitor" {
   description = "Boolean to enable the deployment of a service monitor."
   type        = bool

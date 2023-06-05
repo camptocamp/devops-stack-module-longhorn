@@ -3,6 +3,11 @@ locals {
   domain_full = format("longhorn.apps.%s.%s", var.cluster_name, var.base_domain)
 
   helm_values = [{
+    longhorn = {
+      defaultSettings = {
+        storageOverProvisioningPercentage = var.storage_over_provisioning_percentage
+      }
+    }
     oidc = var.oidc != null ? {
       oauth2_proxy_image      = "quay.io/oauth2-proxy/oauth2-proxy:v7.4.0"
       issuer_url              = var.oidc.issuer_url
