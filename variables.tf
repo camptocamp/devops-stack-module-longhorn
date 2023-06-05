@@ -85,9 +85,9 @@ variable "oidc" {
 
   type = object({
     issuer_url              = string
-    oauth_url               = string
-    token_url               = string
-    api_url                 = string
+    oauth_url               = optional(string, "")
+    token_url               = optional(string, "")
+    api_url                 = optional(string, "")
     client_id               = string
     client_secret           = string
     oauth2_proxy_extra_args = optional(list(string), [])
