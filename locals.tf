@@ -32,6 +32,9 @@ locals {
         "kubernetes.io/ingress.allow-http"                 = "false"
       }
     }
+    grafana_dashboard = {
+      enabled = var.enable_monitoring_dashboard
+    }
     servicemonitor = {
       enabled = var.enable_service_monitor
     }

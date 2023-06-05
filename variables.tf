@@ -86,6 +86,12 @@ variable "enable_dashboard_ingress" {
   default     = false
 }
 
+variable "enable_monitoring_dashboard" {
+  description = "Boolean to enable the provisioning of a Longhorn dashboard for Grafana."
+  type        = bool
+  default     = true
+}
+
 variable "oidc" {
   description = "OIDC settings to configure OAuth2-Proxy which will be used to protect Longhorn's dashboard."
 
