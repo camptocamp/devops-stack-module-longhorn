@@ -70,11 +70,11 @@ The following providers are used by this module:
 
 - [[provider_random]] <<provider_random,random>> (>= 3)
 
+- [[provider_null]] <<provider_null,null>>
+
 - [[provider_utils]] <<provider_utils,utils>> (>= 1)
 
 - [[provider_argocd]] <<provider_argocd,argocd>> (>= 4)
-
-- [[provider_null]] <<provider_null,null>>
 
 === Resources
 
@@ -202,6 +202,14 @@ Description: Boolean to enable the creation of an ingress for the Longhorn's das
 Type: `bool`
 
 Default: `false`
+
+==== [[input_enable_monitoring_dashboard]] <<input_enable_monitoring_dashboard,enable_monitoring_dashboard>>
+
+Description: Boolean to enable the provisioning of a Longhorn dashboard for Grafana.
+
+Type: `bool`
+
+Default: `true`
 
 ==== [[input_oidc]] <<input_oidc,oidc>>
 
@@ -367,6 +375,12 @@ object({
 |Boolean to enable the creation of an ingress for the Longhorn's dashboard. **If enabled, you must provide a value for `base_domain`.**
 |`bool`
 |`false`
+|no
+
+|[[input_enable_monitoring_dashboard]] <<input_enable_monitoring_dashboard,enable_monitoring_dashboard>>
+|Boolean to enable the provisioning of a Longhorn dashboard for Grafana.
+|`bool`
+|`true`
 |no
 
 |[[input_oidc]] <<input_oidc,oidc>>
