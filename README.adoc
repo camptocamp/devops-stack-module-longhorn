@@ -70,11 +70,11 @@ The following providers are used by this module:
 
 - [[provider_random]] <<provider_random,random>> (>= 3)
 
-- [[provider_null]] <<provider_null,null>>
-
 - [[provider_utils]] <<provider_utils,utils>> (>= 1)
 
 - [[provider_argocd]] <<provider_argocd,argocd>> (>= 4)
+
+- [[provider_null]] <<provider_null,null>>
 
 === Resources
 
@@ -86,6 +86,25 @@ The following resources are used by this module:
 - https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.this] (resource)
 - https://registry.terraform.io/providers/random/latest/docs/resources/string[random_string.oauth2_cookie_secret] (resource)
 - https://registry.terraform.io/providers/cloudposse/utils/latest/docs/data-sources/deep_merge_yaml[utils_deep_merge_yaml.values] (data source)
+
+=== Required Inputs
+
+The following input variables are required:
+
+==== [[input_remote_storage]] <<input_remote_storage,remote_storage>>
+
+Description: Exoscale SOS bucket configuration for backups.
+
+Type:
+[source,hcl]
+----
+object({
+    bucket_name       = string
+    endpoint          = string
+    access_key        = string
+    secret_access_key = string
+  })
+----
 
 === Optional Inputs
 
@@ -187,6 +206,14 @@ Type: `number`
 
 Default: `200`
 
+==== [[input_enable_system_backups]] <<input_enable_system_backups,enable_system_backups>>
+
+Description: Boolean to enable backups of Longhorn system to external storage.
+
+Type: `bool`
+
+Default: `false`
+
 ==== [[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
 
 Description: Boolean to enable the deployment of a service monitor.
@@ -262,9 +289,9 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |===
 |Name |Version
 |[[provider_random]] <<provider_random,random>> |>= 3
+|[[provider_null]] <<provider_null,null>> |n/a
 |[[provider_utils]] <<provider_utils,utils>> |>= 1
 |[[provider_argocd]] <<provider_argocd,argocd>> |>= 4
-|[[provider_null]] <<provider_null,null>> |n/a
 |===
 
 = Resources
@@ -363,6 +390,29 @@ object({
 |Set default over-provisioning percentage.
 |`number`
 |`200`
+|no
+
+|[[input_remote_storage]] <<input_remote_storage,remote_storage>>
+|Exoscale SOS bucket configuration for backups.
+|
+
+[source]
+----
+object({
+    bucket_name       = string
+    endpoint          = string
+    access_key        = string
+    secret_access_key = string
+  })
+----
+
+|n/a
+|yes
+
+|[[input_enable_system_backups]] <<input_enable_system_backups,enable_system_backups>>
+|Boolean to enable backups of Longhorn system to external storage.
+|`bool`
+|`false`
 |no
 
 |[[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
