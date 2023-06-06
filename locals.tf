@@ -8,6 +8,15 @@ locals {
         storageOverProvisioningPercentage = var.storage_over_provisioning_percentage
       }
     }
+    backups = {
+      enabled = var.enable_system_backups
+      remote_storage = {
+        bucket_name       = var.remote_storage.bucket_name
+        endpoint          = var.remote_storage.endpoint
+        access_key        = var.remote_storage.access_key
+        secret_access_key = var.remote_storage.secret_access_key
+      }
+    }
     oidc = var.oidc != null ? {
       oauth2_proxy_image      = "quay.io/oauth2-proxy/oauth2-proxy:v7.4.0"
       issuer_url              = var.oidc.issuer_url

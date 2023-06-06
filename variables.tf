@@ -74,6 +74,22 @@ variable "storage_over_provisioning_percentage" {
   default     = 200
 }
 
+variable "remote_storage" {
+  description = "Exoscale SOS bucket configuration for backups."
+  type = object({
+    bucket_name       = string
+    endpoint          = string
+    access_key        = string
+    secret_access_key = string
+  })
+}
+
+variable "enable_system_backups" {
+  description = "Boolean to enable backups of Longhorn system to external storage."
+  type        = bool
+  default     = false
+}
+
 variable "enable_service_monitor" {
   description = "Boolean to enable the deployment of a service monitor."
   type        = bool
