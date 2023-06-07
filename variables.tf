@@ -83,6 +83,7 @@ variable "remote_storage" {
     access_key        = string
     secret_access_key = string
   })
+  default = null
 }
 
 variable "backup_config" {
