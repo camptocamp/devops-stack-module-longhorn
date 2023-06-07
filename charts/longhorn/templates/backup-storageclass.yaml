@@ -17,13 +17,13 @@ parameters:
     {
       "name":"snapshot",
       "task":"snapshot",
-      "cron":"* */2 * * *",
+      "cron":"0 */2 * * *",
       "retain":1
     },
     {
       "name":"backup",
       "task":"backup",
-      "cron":"* */12, * * *",
+      "cron":"30 */12 * * *",
       "retain":3
     }
   ]'
