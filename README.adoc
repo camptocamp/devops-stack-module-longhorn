@@ -207,6 +207,40 @@ Type: `number`
 
 Default: `200`
 
+==== [[input_backup_config]] <<input_backup_config,backup_config>>
+
+Description:     backup_config = {  
+      snapshot_cron : "Cron used to configure schedule or Longhorn automatic snapshots."  
+      snapshot_retention : "Retention of Longhorn automatic snapshots in days."  
+      backup_cron : "Cron used to configure schedule or Longhorn automatic backups."  
+      backup_retention : "Retention of Longhorn automatic backups in days."  
+      default_storageclass : "If true, set longorn-backup as storage class by default for all volumes"
+    }
+
+Type:
+[source,hcl]
+----
+object({
+    snapshot_cron        = string
+    snapshot_retention   = number
+    backup_cron          = string
+    backup_retention     = number
+    default_storageclass = bool
+  })
+----
+
+Default:
+[source,json]
+----
+{
+  "backup_cron": "30 /12 * * *",
+  "backup_retention": "2",
+  "default_storageclass": true,
+  "snapshot_cron": "0 /2 * * *",
+  "snapshot_retention": "1"
+}
+----
+
 ==== [[input_enable_system_backups]] <<input_enable_system_backups,enable_system_backups>>
 
 Description: Boolean to enable backups of Longhorn system to external storage.
@@ -214,38 +248,6 @@ Description: Boolean to enable backups of Longhorn system to external storage.
 Type: `bool`
 
 Default: `false`
-
-==== [[input_snapshot_cron]] <<input_snapshot_cron,snapshot_cron>>
-
-Description: Cron used to configure schedule or Longhorn automatic snapshots.
-
-Type: `string`
-
-Default: `"0 /12 * * *"`
-
-==== [[input_snapshot_retention]] <<input_snapshot_retention,snapshot_retention>>
-
-Description: Retention of Longhorn automatic snapshots in days.
-
-Type: `number`
-
-Default: `1`
-
-==== [[input_backup_cron]] <<input_backup_cron,backup_cron>>
-
-Description: Cron used to configure schedule or Longhorn automatic backups.
-
-Type: `string`
-
-Default: `"30 /2 * * *"`
-
-==== [[input_backup_retention]] <<input_backup_retention,backup_retention>>
-
-Description: Retention of Longhorn automatic backups in days.
-
-Type: `number`
-
-Default: `2`
 
 ==== [[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
 
@@ -443,34 +445,47 @@ object({
 |n/a
 |yes
 
+|[[input_backup_config]] <<input_backup_config,backup_config>>
+|    backup_config = {
+      snapshot_cron : "Cron used to configure schedule or Longhorn automatic snapshots."
+      snapshot_retention : "Retention of Longhorn automatic snapshots in days."
+      backup_cron : "Cron used to configure schedule or Longhorn automatic backups."
+      backup_retention : "Retention of Longhorn automatic backups in days."
+      default_storageclass : "If true, set longorn-backup as storage class by default for all volumes"
+    }
+
+|
+
+[source]
+----
+object({
+    snapshot_cron        = string
+    snapshot_retention   = number
+    backup_cron          = string
+    backup_retention     = number
+    default_storageclass = bool
+  })
+----
+
+|
+
+[source]
+----
+{
+  "backup_cron": "30 /12 * * *",
+  "backup_retention": "2",
+  "default_storageclass": true,
+  "snapshot_cron": "0 /2 * * *",
+  "snapshot_retention": "1"
+}
+----
+
+|no
+
 |[[input_enable_system_backups]] <<input_enable_system_backups,enable_system_backups>>
 |Boolean to enable backups of Longhorn system to external storage.
 |`bool`
 |`false`
-|no
-
-|[[input_snapshot_cron]] <<input_snapshot_cron,snapshot_cron>>
-|Cron used to configure schedule or Longhorn automatic snapshots.
-|`string`
-|`"0 /12 * * *"`
-|no
-
-|[[input_snapshot_retention]] <<input_snapshot_retention,snapshot_retention>>
-|Retention of Longhorn automatic snapshots in days.
-|`number`
-|`1`
-|no
-
-|[[input_backup_cron]] <<input_backup_cron,backup_cron>>
-|Cron used to configure schedule or Longhorn automatic backups.
-|`string`
-|`"30 /2 * * *"`
-|no
-
-|[[input_backup_retention]] <<input_backup_retention,backup_retention>>
-|Retention of Longhorn automatic backups in days.
-|`number`
-|`2`
 |no
 
 |[[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
