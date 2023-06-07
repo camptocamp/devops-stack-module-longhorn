@@ -15,7 +15,7 @@ parameters:
   fromBackup: ""
   recurringJobs: '[
     {
-      "name":"snap",
+      "name":"snapshot",
       "task":"snapshot",
       "cron":"* */2 * * *",
       "retain":1
@@ -24,7 +24,7 @@ parameters:
       "name":"backup",
       "task":"backup",
       "cron":"* */12, * * *",
-      "retain":20
+      "retain":3
     }
   ]'
 

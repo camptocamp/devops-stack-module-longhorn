@@ -5,6 +5,8 @@ locals {
   helm_values = [{
     longhorn = {
       defaultSettings = {
+        backupTarget                      = var.enable_system_backups ? format("s3://%s@%s/", var.remote_storage.bucket_name, var.remote_storage.bucket_region) : ""
+        backupTargetCredentialSecret      = var.enable_system_backups ? "longhorn-sos-secret" : ""
         storageOverProvisioningPercentage = var.storage_over_provisioning_percentage
       }
     }
@@ -12,6 +14,7 @@ locals {
       enabled = var.enable_system_backups
       remote_storage = {
         bucket_name       = var.remote_storage.bucket_name
+        bucket_region     = var.remote_storage.bucket_region
         endpoint          = var.remote_storage.endpoint
         access_key        = var.remote_storage.access_key
         secret_access_key = var.remote_storage.secret_access_key

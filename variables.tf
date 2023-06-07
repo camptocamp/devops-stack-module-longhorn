@@ -78,6 +78,7 @@ variable "remote_storage" {
   description = "Exoscale SOS bucket configuration for backups."
   type = object({
     bucket_name       = string
+    bucket_region     = string
     endpoint          = string
     access_key        = string
     secret_access_key = string
