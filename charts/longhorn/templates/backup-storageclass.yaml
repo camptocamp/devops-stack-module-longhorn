@@ -13,19 +13,19 @@ parameters:
   numberOfReplicas: "3"
   staleReplicaTimeout: "30"
   fromBackup: ""
-  recurringJobs: {{ printf '[
+  recurringJobs: '[
     {
       "name":"snapshot",
       "task":"snapshot",
-      "cron":"%s",
-      "retain":%d
+      "cron": "{{ $.Values.backups.snapshotCron }}",
+      "retain": {{ $.Values.backups.snapshotRetention }}
     },
     {
       "name":"backup",
       "task":"backup",
-      "cron":"%s",
-      "retain":%d
+      "cron": "{{ $.Values.backups.backupCron }}",
+      "retain": {{ $.Values.backups.backupRetention }}
     }
-  ]' $.Values.backups.snapshotCron $.Values.backups.snapshotRetention $.Values.backups.backupCron $.Values.backups.backupRetention }}
+  ]'
 
 {{- end }}
