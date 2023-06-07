@@ -11,11 +11,12 @@ locals {
       }
     }
     backups = {
-      enabled           = var.enable_system_backups
-      snapshotCron      = var.snapshot_cron
-      snapshotRetention = var.snapshot_retention
-      backupCron        = var.backup_cron
-      backupRetention   = var.backup_retention
+      enabled             = var.enable_system_backups
+      snapshotCron        = var.backup_config.snapshot_cron
+      snapshotRetention   = var.backup_config.snapshot_retention
+      backupCron          = var.backup_config.backup_cron
+      backupRetention     = var.backup_config.backup_retention
+      defaultStorageClass = var.backup_config.default_storageclass
       remote_storage = {
         bucket_name       = var.remote_storage.bucket_name
         bucket_region     = var.remote_storage.bucket_region

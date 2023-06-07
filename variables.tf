@@ -85,34 +85,37 @@ variable "remote_storage" {
   })
 }
 
+variable "backup_config" {
+  type = object({
+    snapshot_cron        = string
+    snapshot_retention   = number
+    backup_cron          = string
+    backup_retention     = number
+    default_storageclass = bool
+  })
+  description = <<EOT
+    backup_config = {
+      snapshot_cron : "Cron used to configure schedule or Longhorn automatic snapshots."
+      snapshot_retention : "Retention of Longhorn automatic snapshots in days."
+      backup_cron : "Cron used to configure schedule or Longhorn automatic backups."
+      backup_retention : "Retention of Longhorn automatic backups in days."
+      default_storageclass : "If true, set longorn-backup as storage class by default for all volumes"
+    }
+  EOT
+  default = {
+    snapshot_cron        = "0 /2 * * *"
+    snapshot_retention   = "1"
+    backup_cron          = "30 /12 * * *"
+    backup_retention     = "2"
+    default_storageclass = true
+  }
+
+}
+
 variable "enable_system_backups" {
   description = "Boolean to enable backups of Longhorn system to external storage."
   type        = bool
   default     = false
-}
-
-variable "snapshot_cron" {
-  description = "Cron used to configure schedule or Longhorn automatic snapshots."
-  type        = string
-  default     = "0 /12 * * *"
-}
-
-variable "snapshot_retention" {
-  description = "Retention of Longhorn automatic snapshots in days."
-  type        = number
-  default     = 1
-}
-
-variable "backup_cron" {
-  description = "Cron used to configure schedule or Longhorn automatic backups."
-  type        = string
-  default     = "30 /2 * * *"
-}
-
-variable "backup_retention" {
-  description = "Retention of Longhorn automatic backups in days."
-  type        = number
-  default     = 2
 }
 
 variable "enable_service_monitor" {
