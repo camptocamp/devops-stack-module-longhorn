@@ -215,6 +215,38 @@ Type: `bool`
 
 Default: `false`
 
+==== [[input_snapshot_cron]] <<input_snapshot_cron,snapshot_cron>>
+
+Description: Cron used to configure schedule or Longhorn automatic snapshots.
+
+Type: `string`
+
+Default: `"0 /12 * * *"`
+
+==== [[input_snapshot_retention]] <<input_snapshot_retention,snapshot_retention>>
+
+Description: Retention of Longhorn automatic snapshots in days.
+
+Type: `number`
+
+Default: `1`
+
+==== [[input_backup_cron]] <<input_backup_cron,backup_cron>>
+
+Description: Cron used to configure schedule or Longhorn automatic backups.
+
+Type: `string`
+
+Default: `"30 /2 * * *"`
+
+==== [[input_backup_retention]] <<input_backup_retention,backup_retention>>
+
+Description: Retention of Longhorn automatic backups in days.
+
+Type: `number`
+
+Default: `2`
+
 ==== [[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
 
 Description: Boolean to enable the deployment of a service monitor.
@@ -415,6 +447,30 @@ object({
 |Boolean to enable backups of Longhorn system to external storage.
 |`bool`
 |`false`
+|no
+
+|[[input_snapshot_cron]] <<input_snapshot_cron,snapshot_cron>>
+|Cron used to configure schedule or Longhorn automatic snapshots.
+|`string`
+|`"0 /12 * * *"`
+|no
+
+|[[input_snapshot_retention]] <<input_snapshot_retention,snapshot_retention>>
+|Retention of Longhorn automatic snapshots in days.
+|`number`
+|`1`
+|no
+
+|[[input_backup_cron]] <<input_backup_cron,backup_cron>>
+|Cron used to configure schedule or Longhorn automatic backups.
+|`string`
+|`"30 /2 * * *"`
+|no
+
+|[[input_backup_retention]] <<input_backup_retention,backup_retention>>
+|Retention of Longhorn automatic backups in days.
+|`number`
+|`2`
 |no
 
 |[[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
