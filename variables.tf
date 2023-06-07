@@ -91,6 +91,30 @@ variable "enable_system_backups" {
   default     = false
 }
 
+variable "snapshot_cron" {
+  description = "Cron used to configure schedule or Longhorn automatic snapshots."
+  type        = string
+  default     = "0 /12 * * *"
+}
+
+variable "snapshot_retention" {
+  description = "Retention of Longhorn automatic snapshots in days."
+  type        = number
+  default     = 1
+}
+
+variable "backup_cron" {
+  description = "Cron used to configure schedule or Longhorn automatic backups."
+  type        = string
+  default     = "30 /2 * * *"
+}
+
+variable "backup_retention" {
+  description = "Retention of Longhorn automatic backups in days."
+  type        = number
+  default     = 2
+}
+
 variable "enable_service_monitor" {
   description = "Boolean to enable the deployment of a service monitor."
   type        = bool
