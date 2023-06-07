@@ -104,13 +104,12 @@ variable "backup_config" {
     }
   EOT
   default = {
-    snapshot_cron        = "0 /2 * * *"
+    snapshot_cron        = "0 */2 * * *"
     snapshot_retention   = "1"
-    backup_cron          = "30 /12 * * *"
+    backup_cron          = "30 */12 * * *"
     backup_retention     = "2"
     default_storageclass = true
   }
-
 }
 
 variable "enable_system_backups" {

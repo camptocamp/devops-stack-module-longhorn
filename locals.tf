@@ -9,6 +9,9 @@ locals {
         backupTargetCredentialSecret      = var.enable_system_backups ? "longhorn-sos-secret" : ""
         storageOverProvisioningPercentage = var.storage_over_provisioning_percentage
       }
+      persistence = {
+        defaultClass = var.backup_config.default_storageclass ? "false" : "true"
+      }
     }
     backups = {
       enabled             = var.enable_system_backups
