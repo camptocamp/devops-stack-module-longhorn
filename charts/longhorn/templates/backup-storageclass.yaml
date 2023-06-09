@@ -20,14 +20,14 @@ parameters:
     {
       "name":"snapshot",
       "task":"snapshot",
-      "cron": "{{ $.Values.backups.snapshotCron }}",
-      "retain": {{ $.Values.backups.snapshotRetention }}
+      "cron": "{{ $.Values.backups.backup_config.snapshot_cron }}",
+      "retain": {{ $.Values.backups.backup_config.snapshot_retention }}
     },
     {
       "name":"backup",
       "task":"backup",
-      "cron": "{{ $.Values.backups.backupCron }}",
-      "retain": {{ $.Values.backups.backupRetention }}
+      "cron": "{{ $.Values.backups.backups.backup_config.backup_cron }}",
+      "retain": {{ $.Values.backups.backup_config.backup_retention }}
     }
   ]'
 
