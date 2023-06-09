@@ -8,6 +8,9 @@ metadata:
   annotations:
     storageclass.kubernetes.io/is-default-class: {{ $.Values.backups.defaultStorageClass | quote }}
 provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
 parameters:
   dataLocality: "disabled"
   numberOfReplicas: "3"
