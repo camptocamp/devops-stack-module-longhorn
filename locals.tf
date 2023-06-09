@@ -11,7 +11,7 @@ locals {
         storageMinimalAvailablePercentage = var.storage_minimal_available_percentage
       }
       persistence = {
-        defaultClass = var.set_default_storage_class ? "false" : "true"
+        defaultClass = var.enable_pv_backups && var.set_default_storage_class ? "false" : "true"
       }
     }
     backups = merge({
