@@ -1,3 +1,6 @@
+{{- if $.Values.servicemonitor.enabled -}}
+
+---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -72,3 +75,5 @@ spec:
       for: 5m
       labels:
         severity: warning
+
+{{- end -}}
