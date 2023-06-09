@@ -69,13 +69,31 @@ variable "dependency_ids" {
 #######################
 
 variable "storage_over_provisioning_percentage" {
-  description = "Set default over-provisioning percentage."
+  description = "Set the storage over-provisioning percentage. **This values should be modified only when really needed.** The default is 200%, as https://longhorn.io/docs/1.3.1/best-practices/#minimal-available-storage-and-over-provisioning[recommended in the best practices] for single-disk nodes."
   type        = number
   default     = 200
 }
 
-variable "remote_storage" {
-  description = "Exoscale SOS bucket configuration for backups."
+variable "storage_minimal_available_percentage" {
+  description = "Set the minimal available storage percentage. **This values should be modified only when really needed.** The default is 25%, as https://longhorn.io/docs/1.3.1/best-practices/#minimal-available-storage-and-over-provisioning[recommended in the best practices] for single-disk nodes."
+  type        = number
+  default     = 25
+}
+
+variable "enable_pv_backups" {
+  description = "Boolean to enable backups of Longhorn volumes to an external object storage."
+  type        = bool
+  default     = false
+}
+
+variable "set_default_storage_class" {
+  description = "Boolean to set the Storage Class with the backup configuration as the default for all Persistent Volumes."
+  type        = bool
+  default     = true
+}
+
+variable "backup_storage" {
+  description = "Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_pv_backups` is set to `true`.**"
   type = object({
     bucket_name       = string
     bucket_region     = string
@@ -86,36 +104,28 @@ variable "remote_storage" {
   default = null
 }
 
-variable "backup_config" {
-  type = object({
-    snapshot_cron        = string
-    snapshot_retention   = number
-    backup_cron          = string
-    backup_retention     = number
-    default_storageclass = bool
-  })
-  description = <<EOT
-    backup_config = {
-      snapshot_cron : "Cron used to configure schedule or Longhorn automatic snapshots."
-      snapshot_retention : "Retention of Longhorn automatic snapshots in days."
-      backup_cron : "Cron used to configure schedule or Longhorn automatic backups."
-      backup_retention : "Retention of Longhorn automatic backups in days."
-      default_storageclass : "If true, set longorn-backup as storage class by default for all volumes"
-    }
+variable "backup_configuration" {
+  description = <<-EOT
+    The following values can be configured:
+    . `snapshot_cron` - Cron schedule to configure Longhorn automatic snapshots.
+    . `snapshot_retention` - Retention of Longhorn automatic snapshots in days.
+    . `backup_cron` - Cron schedule to configure Longhorn automatic backups.
+    . `backup_retention` - Retention of Longhorn automatic backups in days.
   EOT
-  default = {
-    snapshot_cron        = "0 */2 * * *"
-    snapshot_retention   = "1"
-    backup_cron          = "30 */12 * * *"
-    backup_retention     = "2"
-    default_storageclass = true
-  }
-}
 
-variable "enable_system_backups" {
-  description = "Boolean to enable backups of Longhorn system to external storage."
-  type        = bool
-  default     = false
+  type = object({
+    snapshot_cron      = string
+    snapshot_retention = number
+    backup_cron        = string
+    backup_retention   = number
+  })
+
+  default = {
+    snapshot_cron      = "0 */2 * * *"
+    snapshot_retention = "1"
+    backup_cron        = "30 */12 * * *"
+    backup_retention   = "2"
+  }
 }
 
 variable "enable_service_monitor" {
@@ -138,7 +148,6 @@ variable "enable_monitoring_dashboard" {
 
 variable "oidc" {
   description = "OIDC settings to configure OAuth2-Proxy which will be used to protect Longhorn's dashboard."
-
   type = object({
     issuer_url              = string
     oauth_url               = optional(string, "")
@@ -148,6 +157,5 @@ variable "oidc" {
     client_secret           = string
     oauth2_proxy_extra_args = optional(list(string), [])
   })
-
   default = null
 }

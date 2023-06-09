@@ -5,29 +5,21 @@ locals {
   helm_values = [{
     longhorn = {
       defaultSettings = {
-        backupTarget                      = var.enable_system_backups ? format("s3://%s@%s/", var.remote_storage.bucket_name, var.remote_storage.bucket_region) : ""
-        backupTargetCredentialSecret      = var.enable_system_backups ? "longhorn-sos-secret" : ""
+        backupTarget                      = var.enable_pv_backups ? format("s3://%s@%s/", var.backup_storage.bucket_name, var.backup_storage.bucket_region) : ""
+        backupTargetCredentialSecret      = var.enable_pv_backups ? "longhorn-s3-secret" : ""
         storageOverProvisioningPercentage = var.storage_over_provisioning_percentage
+        storageMinimalAvailablePercentage = var.storage_minimal_available_percentage
       }
       persistence = {
-        defaultClass = var.backup_config.default_storageclass ? "false" : "true"
+        defaultClass = var.set_default_storage_class ? "false" : "true"
       }
     }
-    backups = {
-      enabled             = var.enable_system_backups
-      snapshotCron        = var.backup_config.snapshot_cron
-      snapshotRetention   = var.backup_config.snapshot_retention
-      backupCron          = var.backup_config.backup_cron
-      backupRetention     = var.backup_config.backup_retention
-      defaultStorageClass = var.backup_config.default_storageclass
-      remote_storage = {
-        bucket_name       = var.remote_storage.bucket_name
-        bucket_region     = var.remote_storage.bucket_region
-        endpoint          = var.remote_storage.endpoint
-        access_key        = var.remote_storage.access_key
-        secret_access_key = var.remote_storage.secret_access_key
-      }
-    }
+    backups = var.enable_pv_backups ? {
+      enabled               = var.enable_pv_backups
+      default_storage_class = var.set_default_storage_class
+      backup_config         = var.backup_configuration
+      backup_storage        = var.backup_storage
+    } : null
     oidc = var.oidc != null ? {
       oauth2_proxy_image      = "quay.io/oauth2-proxy/oauth2-proxy:v7.4.0"
       issuer_url              = var.oidc.issuer_url
