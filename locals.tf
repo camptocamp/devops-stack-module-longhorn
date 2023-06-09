@@ -14,12 +14,13 @@ locals {
         defaultClass = var.set_default_storage_class ? "false" : "true"
       }
     }
-    backups = var.enable_pv_backups ? {
-      enabled               = var.enable_pv_backups
+    backups = merge({
+      enabled = var.enable_pv_backups
+      }, var.enable_pv_backups ? {
       default_storage_class = var.set_default_storage_class
       backup_config         = var.backup_configuration
       backup_storage        = var.backup_storage
-    } : null
+    } : null)
     oidc = var.oidc != null ? {
       oauth2_proxy_image      = "quay.io/oauth2-proxy/oauth2-proxy:v7.4.0"
       issuer_url              = var.oidc.issuer_url
