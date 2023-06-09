@@ -26,7 +26,7 @@ parameters:
     {
       "name":"backup",
       "task":"backup",
-      "cron": "{{ $.Values.backups.backups.backup_config.backup_cron }}",
+      "cron": "{{ $.Values.backups.backup_config.backup_cron }}",
       "retain": {{ $.Values.backups.backup_config.backup_retention }}
     }
   ]'
