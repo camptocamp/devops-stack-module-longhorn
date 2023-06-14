@@ -80,7 +80,7 @@ variable "storage_minimal_available_percentage" {
   default     = 25
 }
 
-variable "enable_pv_backups" {
+variable "enable_system_backups" {
   description = "Boolean to enable backups of Longhorn volumes to an external object storage."
   type        = bool
   default     = false
@@ -93,11 +93,11 @@ variable "set_default_storage_class" {
 }
 
 variable "backup_storage" {
-  description = "Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_pv_backups` is set to `true`.**"
+  description = "Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_system_backups` is set to `true`.**"
   type = object({
     bucket_name = string
     region      = string
-    endpoint    = optional(string, "sos-${var.backup_storage.region}.exo.io")
+    endpoint    = string
     access_key  = string
     secret_key  = string
   })
