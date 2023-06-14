@@ -70,11 +70,11 @@ The following providers are used by this module:
 
 - [[provider_random]] <<provider_random,random>> (>= 3)
 
-- [[provider_null]] <<provider_null,null>>
+- [[provider_utils]] <<provider_utils,utils>> (>= 1)
 
 - [[provider_argocd]] <<provider_argocd,argocd>> (>= 4)
 
-- [[provider_utils]] <<provider_utils,utils>> (>= 1)
+- [[provider_null]] <<provider_null,null>>
 
 === Resources
 
@@ -219,11 +219,11 @@ Type:
 [source,hcl]
 ----
 object({
-    bucket_name       = string
-    bucket_region     = string
-    endpoint          = string
-    access_key        = string
-    secret_access_key = string
+    bucket_name = string
+    region      = string
+    endpoint    = optional(string, "sos-${var.backup_storage.region}.exo.io")
+    access_key  = string
+    secret_key  = string
   })
 ----
 
@@ -334,9 +334,9 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |===
 |Name |Version
 |[[provider_random]] <<provider_random,random>> |>= 3
-|[[provider_null]] <<provider_null,null>> |n/a
 |[[provider_utils]] <<provider_utils,utils>> |>= 1
 |[[provider_argocd]] <<provider_argocd,argocd>> |>= 4
+|[[provider_null]] <<provider_null,null>> |n/a
 |===
 
 = Resources
@@ -462,11 +462,11 @@ object({
 [source]
 ----
 object({
-    bucket_name       = string
-    bucket_region     = string
-    endpoint          = string
-    access_key        = string
-    secret_access_key = string
+    bucket_name = string
+    region      = string
+    endpoint    = optional(string, "sos-${var.backup_storage.region}.exo.io")
+    access_key  = string
+    secret_key  = string
   })
 ----
 
