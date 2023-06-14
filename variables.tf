@@ -95,11 +95,11 @@ variable "set_default_storage_class" {
 variable "backup_storage" {
   description = "Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_pv_backups` is set to `true`.**"
   type = object({
-    bucket_name       = string
-    bucket_region     = string
-    endpoint          = string
-    access_key        = string
-    secret_access_key = string
+    bucket_name = string
+    region      = string
+    endpoint    = optional(string, "sos-${var.backup_storage.region}.exo.io")
+    access_key  = string
+    secret_key  = string
   })
   default = null
 }
