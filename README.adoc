@@ -195,7 +195,7 @@ Type: `number`
 
 Default: `25`
 
-==== [[input_enable_pv_backups]] <<input_enable_pv_backups,enable_pv_backups>>
+==== [[input_enable_system_backups]] <<input_enable_system_backups,enable_system_backups>>
 
 Description: Boolean to enable backups of Longhorn volumes to an external object storage.
 
@@ -213,7 +213,7 @@ Default: `true`
 
 ==== [[input_backup_storage]] <<input_backup_storage,backup_storage>>
 
-Description: Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_pv_backups` is set to `true`.**
+Description: Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_system_backups` is set to `true`.**
 
 Type:
 [source,hcl]
@@ -221,7 +221,7 @@ Type:
 object({
     bucket_name = string
     region      = string
-    endpoint    = optional(string, "sos-${var.backup_storage.region}.exo.io")
+    endpoint    = string
     access_key  = string
     secret_key  = string
   })
@@ -443,7 +443,7 @@ object({
 |`25`
 |no
 
-|[[input_enable_pv_backups]] <<input_enable_pv_backups,enable_pv_backups>>
+|[[input_enable_system_backups]] <<input_enable_system_backups,enable_system_backups>>
 |Boolean to enable backups of Longhorn volumes to an external object storage.
 |`bool`
 |`false`
@@ -456,7 +456,7 @@ object({
 |no
 
 |[[input_backup_storage]] <<input_backup_storage,backup_storage>>
-|Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_pv_backups` is set to `true`.**
+|Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_system_backups` is set to `true`.**
 |
 
 [source]
@@ -464,7 +464,7 @@ object({
 object({
     bucket_name = string
     region      = string
-    endpoint    = optional(string, "sos-${var.backup_storage.region}.exo.io")
+    endpoint    = string
     access_key  = string
     secret_key  = string
   })
