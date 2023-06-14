@@ -5,18 +5,18 @@ locals {
   helm_values = [{
     longhorn = {
       defaultSettings = {
-        backupTarget                      = var.enable_system_backups ? format("s3://%s@%s/", var.backup_storage.bucket_name, var.backup_storage.region) : ""
-        backupTargetCredentialSecret      = var.enable_system_backups ? "longhorn-s3-secret" : ""
+        backupTarget                      = var.enable_pv_backups ? format("s3://%s@%s/", var.backup_storage.bucket_name, var.backup_storage.region) : ""
+        backupTargetCredentialSecret      = var.enable_pv_backups ? "longhorn-s3-secret" : ""
         storageOverProvisioningPercentage = var.storage_over_provisioning_percentage
         storageMinimalAvailablePercentage = var.storage_minimal_available_percentage
       }
       persistence = {
-        defaultClass = var.enable_system_backups && var.set_default_storage_class ? "false" : "true"
+        defaultClass = var.enable_pv_backups && var.set_default_storage_class ? "false" : "true"
       }
     }
     backups = merge({
-      enabled = var.enable_system_backups
-      }, var.enable_system_backups ? {
+      enabled = var.enable_pv_backups
+      }, var.enable_pv_backups ? {
       defaultStorageClass = var.set_default_storage_class
       config              = var.backup_configuration
       storage             = var.backup_storage
