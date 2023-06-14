@@ -6,7 +6,7 @@ kind: StorageClass
 metadata:
   name: {{ $.Release.Name }}-backup
   annotations:
-    storageclass.kubernetes.io/is-default-class: {{ $.Values.backups.default_storage_class | quote }}
+    storageclass.kubernetes.io/is-default-class: {{ $.Values.backups.defaultStorageClass | quote }}
 provisioner: driver.longhorn.io
 allowVolumeExpansion: true
 reclaimPolicy: Delete
@@ -20,14 +20,14 @@ parameters:
     {
       "name":"snapshot",
       "task":"snapshot",
-      "cron": "{{ $.Values.backups.backup_config.snapshot_cron }}",
-      "retain": {{ $.Values.backups.backup_config.snapshot_retention }}
+      "cron": "{{ $.Values.backups.config.snapshot_cron }}",
+      "retain": {{ $.Values.backups.config.snapshot_retention }}
     },
     {
       "name":"backup",
       "task":"backup",
-      "cron": "{{ $.Values.backups.backup_config.backup_cron }}",
-      "retain": {{ $.Values.backups.backup_config.backup_retention }}
+      "cron": "{{ $.Values.backups.config.backup_cron }}",
+      "retain": {{ $.Values.backups.config.backup_retention }}
     }
   ]'
 
