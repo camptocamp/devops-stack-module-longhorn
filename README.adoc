@@ -22,7 +22,7 @@ A simple declaration of the module would look like this:
 [source,terraform]
 ----
 module "longhorn" {
-  source          = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
+  source = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
 
   cluster_name     = module.sks.cluster_name
   base_domain      = module.sks.base_domain
@@ -40,7 +40,7 @@ You can enable the ingress to the Longhorn Dashboard. In that case, you will nee
 [source,terraform]
 ----
 module "longhorn" {
-  source          = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
+  source = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
 
   cluster_name     = module.sks.cluster_name
   base_domain      = module.sks.base_domain
@@ -66,7 +66,7 @@ In case you want to backup the content of the persistent volumes, you have the p
 [source,terraform]
 ----
 module "longhorn" {
-  source          = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
+  source = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
 
   cluster_name     = module.sks.cluster_name
   base_domain      = module.sks.base_domain
