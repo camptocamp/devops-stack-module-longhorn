@@ -1,25 +1,28 @@
 = devops-stack-module-longhorn
 // Document attributes to replace along the document
-// Here you can define variables for something that keeps repeating along the text
 :chart-version: 1.4.2
 :original-repo-url: https://github.com/longhorn/longhorn
 
-A https://devops-stack.io[DevOps Stack] module to deploy and configure *_Longhorn_*.
+A https://devops-stack.io[DevOps Stack] module to deploy and configure https://longhorn.io/[Longhorn].
 
-The *_Longhorn_* chart used by this module is shipped in this repository as well, in order to avoid any unwanted behaviors caused by unsupported versions. 
+The Longhorn chart used by this module is shipped in this repository as well, in order to avoid any unwanted behaviors caused by unsupported versions. 
 
 [cols="1,1,1",options="autowidth,header"]
 |===
 |Current Chart Version |Original Repository |Default Values
-|*{chart-version}* |{original-repo-url}/tree/master/chart[Chart] | https://artifacthub.io/packages/helm/longhorn/longhorn[`values.yaml`]
+|*{chart-version}* |{original-repo-url}/tree/master/chart[Chart] | https://artifacthub.io/packages/helm/longhorn/longhorn/{chart-version}?modal=values[`values.yaml`]
 |===
 
+IMPORTANT: For the moment, this module only supports the deployment of Longhorn in SKS clusters.
+
 == Usage
+
+A simple declaration of the module would look like this:
 
 [source,terraform]
 ----
 module "longhorn" {
-  source          = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?v=1.0.0"
+  source          = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
 
   cluster_name     = module.sks.cluster_name
   base_domain      = module.sks.base_domain
@@ -27,20 +30,111 @@ module "longhorn" {
   argocd_namespace = module.argocd_bootstrap.argocd_namespace
 
   dependency_ids = {
-    argocd                = module.argocd_bootstrap.id
+    argocd = module.argocd_bootstrap.id
   }
 }
 ----
 
+You can enable the ingress to the Longhorn Dashboard. In that case, you will need to enable the respective flag and pass along the require OIDC configuration:
+
+[source,terraform]
+----
+module "longhorn" {
+  source          = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
+
+  cluster_name     = module.sks.cluster_name
+  base_domain      = module.sks.base_domain
+  cluster_issuer   = local.cluster_issuer
+  argocd_namespace = module.argocd_bootstrap.argocd_namespace
+
+  enable_dashboard_ingress = true
+  oidc                     = module.oidc.oidc
+
+  dependency_ids = {
+    argocd = module.argocd_bootstrap.id
+    traefik      = module.traefik.id
+    cert-manager = module.cert-manager.id
+    keycloak     = module.keycloak.id
+    oidc         = module.oidc.id
+  }
+----
+
+NOTE: The previous example uses xref:keycloak:ROOT:README.adoc[Keycloak] as an OIDC provider, but you can any other you want.
+
+In case you want to backup the content of the persistent volumes, you have the possibility of enabling the backup feature. In that case, you will need to enable the respective flag and pass along the require S3 configuration:
+
+[source,terraform]
+----
+module "longhorn" {
+  source          = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
+
+  cluster_name     = module.sks.cluster_name
+  base_domain      = module.sks.base_domain
+  cluster_issuer   = local.cluster_issuer
+  argocd_namespace = module.argocd_bootstrap.argocd_namespace
+
+  enable_dashboard_ingress = true
+  oidc                     = module.oidc.oidc
+
+  enable_pv_backups = true
+  backup_storage = {
+    bucket_name = resource.aws_s3_bucket.this["longhorn"].id
+    region      = resource.aws_s3_bucket.this["longhorn"].region
+    endpoint    = "sos-${resource.aws_s3_bucket.this["longhorn"].region}.exo.io"
+    access_key  = resource.exoscale_iam_access_key.s3_iam_key["longhorn"].key
+    secret_key  = resource.exoscale_iam_access_key.s3_iam_key["longhorn"].secret
+  }
+
+  dependency_ids = {
+    argocd = module.argocd_bootstrap.id
+    traefik      = module.traefik.id
+    cert-manager = module.cert-manager.id
+    keycloak     = module.keycloak.id
+    oidc         = module.oidc.id
+  }
+----
+
+
+IMPORTANT: You are in charge of creating the S3 bucket to store the PV backups. We've decided to keep the creation of this bucket outside of this module, mainly because the persistence of the data should not be related to the instantiation of the module itself.
+
+TIP: Check the SKS deployment example to see how to create the S3 bucket and to better understand the values passed on the example above.
+
+TIP: On the technical reference below you will find further customization options, such as the backup/snapshot schedule.
+
+=== OIDC
+
+There is an OAuth2-Proxy container deployed along with the Longhorn dashboard. Consequently, the `oidc` variable is expected to have at least the Issuer URL, the Client ID, and the Client Secret.
+
+You can pass these values by pointing an output from another module (as above), or by defining them explicitly:
+
+[source,terraform]
+----
+module "longhorn" {
+  ...
+  oidc = {
+    issuer_url    = "<URL>"
+    client_id     = "<ID>"
+    client_secret = "<SECRET>"
+  }
+  ...
+}
+----
+
+== Technical Reference
+
 === Dependencies
 
-==== `module.argocd_bootstrap`
+==== `module.argocd_bootstrap.id`
 
-This module must be one of the first ones to be deployed and consequently it needs to be deployed after the module `argocd_bootstrap`.
+This module must be one of the first ones to be deployed, since other modules require Persistent Volumes. Consequently it needs to be deployed right after the module `argocd_bootstrap`. This is the only dependency that is not optional.
 
-==== `module.kube-prometheus-stack`
+==== `module.traefik.id` and `module.cert-manager.id`
 
-This module is a dependency if the Longhorn servicemonitor is enabled.
+When enabling the ingress for the Longhorn Dashboard, you need to add Traefik and cert-manager as dependencies.
+
+==== `module.keycloak.id` and `module.oidc.id`
+
+When using Keycloak as an OIDC provider for the Longhorn Dashboard, you need to add Keycloak and the OIDC module as dependencies.
 
 // BEGIN_TF_DOCS
 === Requirements
