@@ -101,6 +101,62 @@ TIP: Check the SKS deployment example to see how to create the S3 bucket and to 
 
 TIP: On the technical reference below you will find further customization options, such as the backup/snapshot schedule.
 
+If there is a need to configure something besides the common settings that we have provided, you can customize the chart's `values.yaml` by adding an Helm configuration as an HCL structure:
+
+[source,terraform]
+----
+module "longhorn" {
+  source = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
+
+  cluster_name     = module.sks.cluster_name
+  base_domain      = module.sks.base_domain
+  cluster_issuer   = local.cluster_issuer
+  argocd_namespace = module.argocd_bootstrap.argocd_namespace
+
+  enable_dashboard_ingress = true
+  oidc                     = module.oidc.oidc
+
+  enable_pv_backups = true
+  backup_storage = {
+    bucket_name = resource.aws_s3_bucket.this["longhorn"].id
+    region      = resource.aws_s3_bucket.this["longhorn"].region
+    endpoint    = "sos-${resource.aws_s3_bucket.this["longhorn"].region}.exo.io"
+    access_key  = resource.exoscale_iam_access_key.s3_iam_key["longhorn"].key
+    secret_key  = resource.exoscale_iam_access_key.s3_iam_key["longhorn"].secret
+  }
+
+  helm_values = [{ # Note the curly brackets here
+    longhorn = {
+      map = {
+        string = "string"
+        bool   = true
+      }
+      sequence = [
+        {
+          key1 = "value1"
+          key2 = "value2"
+        },
+        {
+          key1 = "value1"
+          key2 = "value2"
+        },
+      ]
+      sequence2 = [
+        "string1",
+        "string2"
+      ]
+    }
+  }]
+
+  dependency_ids = {
+    argocd = module.argocd_bootstrap.id
+    traefik      = module.traefik.id
+    cert-manager = module.cert-manager.id
+    keycloak     = module.keycloak.id
+    oidc         = module.oidc.id
+  }
+----
+
 === OIDC
 
 There is an OAuth2-Proxy container deployed along with the Longhorn dashboard. Consequently, the `oidc` variable is expected to have at least the Issuer URL, the Client ID, and the Client Secret.
