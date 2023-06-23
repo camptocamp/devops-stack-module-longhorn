@@ -480,9 +480,9 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |===
 |Name |Version
 |[[provider_random]] <<provider_random,random>> |>= 3
+|[[provider_null]] <<provider_null,null>> |n/a
 |[[provider_utils]] <<provider_utils,utils>> |>= 1
 |[[provider_argocd]] <<provider_argocd,argocd>> |>= 4
-|[[provider_null]] <<provider_null,null>> |n/a
 |===
 
 = Resources
