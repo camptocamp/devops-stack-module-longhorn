@@ -1,6 +1,6 @@
 ---
-name: "template"
-title: "Module Template"
+name: "longhorn"
+title: "Longhorn Module"
 version: true
 start_page: README.adoc
 nav:

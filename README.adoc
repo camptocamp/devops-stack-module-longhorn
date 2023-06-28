@@ -1,57 +1,203 @@
-= devops-stack-module-template
+= devops-stack-module-longhorn
 // Document attributes to replace along the document
-// Here you can define variables for something that keeps repeating along the text
-:chart-version: 1.2.3
-:original-repo-url: https://github.com/path/to/some/repository
+:chart-version: 1.4.2
+:original-repo-url: https://github.com/longhorn/longhorn
 
-A https://devops-stack.io[DevOps Stack] module to deploy *_something_*.
+A https://devops-stack.io[DevOps Stack] module to deploy and configure https://longhorn.io/[Longhorn].
 
-The *_something_* chart used by this module is shipped in this repository as well, in order to avoid any unwanted behaviors caused by unsupported versions. 
+The Longhorn chart used by this module is shipped in this repository as well, in order to avoid any unwanted behaviors caused by unsupported versions. 
 
 [cols="1,1,1",options="autowidth,header"]
 |===
 |Current Chart Version |Original Repository |Default Values
-|*{chart-version}* |{original-repo-url}/subpath/to/the/chart[Chart] |{original-repo-url}//subpath/to/the/values.yaml[`values.yaml`] (_here you can also use artifacthub.io_)
+|*{chart-version}* |{original-repo-url}/tree/master/chart[Chart] | https://artifacthub.io/packages/helm/longhorn/longhorn/{chart-version}?modal=values[`values.yaml`]
 |===
+
+IMPORTANT: For the moment, this module only supports the deployment of Longhorn in SKS clusters.
 
 == Usage
 
-_Here you will show examples of how to call this module on your code. Note that the `depends_on` needs to be adapted to your use case._
-
-_You can start by giving a simple example and then show some others with increasing complexity and/or for specific use cases._
+A simple declaration of the module would look like this:
 
 [source,terraform]
 ----
-module "template" {
-  source = "git::https://github.com/camptocamp/devops-stack-module-template.git?ref=<RELEASE>"
+module "longhorn" {
+  source = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
 
-  cluster_name            = local.cluster_name
-  argocd_namespace        = local.argocd_namespace
+  cluster_name     = module.sks.cluster_name
+  base_domain      = module.sks.base_domain
+  cluster_issuer   = local.cluster_issuer
+  argocd_namespace = module.argocd_bootstrap.argocd_namespace
 
-  # TODO Consider replacing this depends_on by our dependency_ids
-  depends_on = [
-    module.argocd_bootstrap,
-  ]
+  dependency_ids = {
+    argocd = module.argocd_bootstrap.id
+  }
 }
 ----
 
-=== Something Explained Better
+You can enable the ingress to the Longhorn Dashboard. In that case, you will need to enable the respective flag and pass along the require OIDC configuration:
 
-_If there is some part of the module's configuration that needs more specific explanations, such as a very particular output on which every other module depends on, maybe consider creating a subsection to improve readability._
+[source,terraform]
+----
+module "longhorn" {
+  source = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
 
-NOTE: _The AsciiDoc syntax provides a way to write admonitions such as this one, so use it if you think it is useful. The https://docs.antora.org/antora/latest/asciidoc/admonitions/[official documentation] for Antora Docs provides more examples._
+  cluster_name     = module.sks.cluster_name
+  base_domain      = module.sks.base_domain
+  cluster_issuer   = local.cluster_issuer
+  argocd_namespace = module.argocd_bootstrap.argocd_namespace
+
+  enable_dashboard_ingress = true
+  oidc                     = module.oidc.oidc
+
+  dependency_ids = {
+    argocd = module.argocd_bootstrap.id
+    traefik      = module.traefik.id
+    cert-manager = module.cert-manager.id
+    keycloak     = module.keycloak.id
+    oidc         = module.oidc.id
+  }
+----
+
+NOTE: The previous example uses xref:keycloak:ROOT:README.adoc[Keycloak] as an OIDC provider, but you can any other you want.
+
+In case you want to backup the content of the persistent volumes, you have the possibility of enabling the backup feature. In that case, you will need to enable the respective flag and pass along the require S3 configuration:
+
+[source,terraform]
+----
+module "longhorn" {
+  source = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
+
+  cluster_name     = module.sks.cluster_name
+  base_domain      = module.sks.base_domain
+  cluster_issuer   = local.cluster_issuer
+  argocd_namespace = module.argocd_bootstrap.argocd_namespace
+
+  enable_dashboard_ingress = true
+  oidc                     = module.oidc.oidc
+
+  enable_pv_backups = true
+  backup_storage = {
+    bucket_name = resource.aws_s3_bucket.this["longhorn"].id
+    region      = resource.aws_s3_bucket.this["longhorn"].region
+    endpoint    = "sos-${resource.aws_s3_bucket.this["longhorn"].region}.exo.io"
+    access_key  = resource.exoscale_iam_access_key.s3_iam_key["longhorn"].key
+    secret_key  = resource.exoscale_iam_access_key.s3_iam_key["longhorn"].secret
+  }
+
+  dependency_ids = {
+    argocd = module.argocd_bootstrap.id
+    traefik      = module.traefik.id
+    cert-manager = module.cert-manager.id
+    keycloak     = module.keycloak.id
+    oidc         = module.oidc.id
+  }
+----
+
+
+IMPORTANT: You are in charge of creating the S3 bucket to store the PV backups. We've decided to keep the creation of this bucket outside of this module, mainly because the persistence of the data should not be related to the instantiation of the module itself.
+
+TIP: Check the SKS deployment example to see how to create the S3 bucket and to better understand the values passed on the example above.
+
+TIP: On the technical reference below you will find further customization options, such as the backup/snapshot schedule.
+
+If there is a need to configure something besides the common settings that we have provided, you can customize the chart's `values.yaml` by adding an Helm configuration as an HCL structure:
+
+[source,terraform]
+----
+module "longhorn" {
+  source = "git::https://github.com/camptocamp/devops-stack-module-longhorn.git?ref=<RELEASE>"
+
+  cluster_name     = module.sks.cluster_name
+  base_domain      = module.sks.base_domain
+  cluster_issuer   = local.cluster_issuer
+  argocd_namespace = module.argocd_bootstrap.argocd_namespace
+
+  enable_dashboard_ingress = true
+  oidc                     = module.oidc.oidc
+
+  enable_pv_backups = true
+  backup_storage = {
+    bucket_name = resource.aws_s3_bucket.this["longhorn"].id
+    region      = resource.aws_s3_bucket.this["longhorn"].region
+    endpoint    = "sos-${resource.aws_s3_bucket.this["longhorn"].region}.exo.io"
+    access_key  = resource.exoscale_iam_access_key.s3_iam_key["longhorn"].key
+    secret_key  = resource.exoscale_iam_access_key.s3_iam_key["longhorn"].secret
+  }
+
+  helm_values = [{ # Note the curly brackets here
+    longhorn = {
+      map = {
+        string = "string"
+        bool   = true
+      }
+      sequence = [
+        {
+          key1 = "value1"
+          key2 = "value2"
+        },
+        {
+          key1 = "value1"
+          key2 = "value2"
+        },
+      ]
+      sequence2 = [
+        "string1",
+        "string2"
+      ]
+    }
+  }]
+
+  dependency_ids = {
+    argocd = module.argocd_bootstrap.id
+    traefik      = module.traefik.id
+    cert-manager = module.cert-manager.id
+    keycloak     = module.keycloak.id
+    oidc         = module.oidc.id
+  }
+----
+
+=== OIDC
+
+There is an OAuth2-Proxy container deployed along with the Longhorn dashboard. Consequently, the `oidc` variable is expected to have at least the Issuer URL, the Client ID, and the Client Secret.
+
+You can pass these values by pointing an output from another module (as above), or by defining them explicitly:
+
+[source,terraform]
+----
+module "longhorn" {
+  ...
+  oidc = {
+    issuer_url    = "<URL>"
+    client_id     = "<ID>"
+    client_secret = "<SECRET>"
+  }
+  ...
+}
+----
+
+=== Restoring volume backups
+
+1. If your pod and his volume are still up, start by shuting down the pod (be careful to also stop the Deployment/StatefulSet) and delete the volume using the Longhorn Dashboard.
+2. Go to the backup tab of Longhorn Dashboard and restore the desired volume backup. You must check the _Use Previous Name_ checkbox in order to keep the old volume name.
+3. Next, go to the volume tab, select your newly restored volume and choose _Create PV/PVC_ option. Select _Use Previous PVC_ option and validate.
+4. You can now restore your application, which should attach the restored volume automatically.
 
 == Technical Reference
 
-_This section will contain the more technical details of the module. It is mainly generated automatically by Terraform Docs (everything that is between the comments `BEGIN_TF_DOCS` / `END_TF_DOCS`). However, it is recommended to, at the bare minimum, add a dependencies section to explain the reason on why this module could depend on another one from the DevOps Stack._
-
-_You can safely delete the content between the comments `BEGIN_TF_DOCS` / `END_TF_DOCS` and `BEGIN_TF_TABLES` / `END_TF_TABLES` when creating your on module._
-
 === Dependencies
 
-==== `module.argocd_bootstrap`
+==== `module.argocd_bootstrap.id`
 
-This module must be one of the first ones to be deployed and consequently it needs to be deployed after the module `argocd_bootstrap`.
+This module must be one of the first ones to be deployed, since other modules require Persistent Volumes. Consequently it needs to be deployed right after the module `argocd_bootstrap`. This is the only dependency that is not optional.
+
+==== `module.traefik.id` and `module.cert-manager.id`
+
+When enabling the ingress for the Longhorn Dashboard, you need to add Traefik and cert-manager as dependencies.
+
+==== `module.keycloak.id` and `module.oidc.id`
+
+When using Keycloak as an OIDC provider for the Longhorn Dashboard, you need to add Keycloak and the OIDC module as dependencies.
 
 // BEGIN_TF_DOCS
 === Requirements
@@ -60,17 +206,21 @@ The following requirements are needed by this module:
 
 - [[requirement_argocd]] <<requirement_argocd,argocd>> (>= 4)
 
+- [[requirement_random]] <<requirement_random,random>> (>= 3)
+
 - [[requirement_utils]] <<requirement_utils,utils>> (>= 1)
 
 === Providers
 
 The following providers are used by this module:
 
-- [[provider_null]] <<provider_null,null>>
+- [[provider_random]] <<provider_random,random>> (>= 3)
 
 - [[provider_utils]] <<provider_utils,utils>> (>= 1)
 
 - [[provider_argocd]] <<provider_argocd,argocd>> (>= 4)
+
+- [[provider_null]] <<provider_null,null>>
 
 === Resources
 
@@ -80,6 +230,7 @@ The following resources are used by this module:
 - https://registry.terraform.io/providers/oboukili/argocd/latest/docs/resources/project[argocd_project.this] (resource)
 - https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.dependencies] (resource)
 - https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.this] (resource)
+- https://registry.terraform.io/providers/random/latest/docs/resources/string[random_string.oauth2_cookie_secret] (resource)
 - https://registry.terraform.io/providers/cloudposse/utils/latest/docs/data-sources/deep_merge_yaml[utils_deep_merge_yaml.values] (data source)
 
 === Optional Inputs
@@ -132,7 +283,7 @@ Description: Namespace where the applications's Kubernetes resources should be c
 
 Type: `string`
 
-Default: `"<NAMESPACE>"`
+Default: `"longhorn-system"`
 
 ==== [[input_helm_values]] <<input_helm_values,helm_values>>
 
@@ -174,6 +325,130 @@ Type: `map(string)`
 
 Default: `{}`
 
+==== [[input_storage_over_provisioning_percentage]] <<input_storage_over_provisioning_percentage,storage_over_provisioning_percentage>>
+
+Description: Set the storage over-provisioning percentage. **This values should be modified only when really needed.** The default is 200%, as https://longhorn.io/docs/1.3.1/best-practices/#minimal-available-storage-and-over-provisioning[recommended in the best practices] for single-disk nodes.
+
+Type: `number`
+
+Default: `200`
+
+==== [[input_storage_minimal_available_percentage]] <<input_storage_minimal_available_percentage,storage_minimal_available_percentage>>
+
+Description: Set the minimal available storage percentage. **This values should be modified only when really needed.** The default is 25%, as https://longhorn.io/docs/1.3.1/best-practices/#minimal-available-storage-and-over-provisioning[recommended in the best practices] for single-disk nodes.
+
+Type: `number`
+
+Default: `25`
+
+==== [[input_enable_pv_backups]] <<input_enable_pv_backups,enable_pv_backups>>
+
+Description: Boolean to enable backups of Longhorn volumes to an external object storage.
+
+Type: `bool`
+
+Default: `false`
+
+==== [[input_set_default_storage_class]] <<input_set_default_storage_class,set_default_storage_class>>
+
+Description: Boolean to set the Storage Class with the backup configuration as the default for all Persistent Volumes.
+
+Type: `bool`
+
+Default: `true`
+
+==== [[input_backup_storage]] <<input_backup_storage,backup_storage>>
+
+Description: Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_pv_backups` is set to `true`.**
+
+Type:
+[source,hcl]
+----
+object({
+    bucket_name = string
+    region      = string
+    endpoint    = string
+    access_key  = string
+    secret_key  = string
+  })
+----
+
+Default: `null`
+
+==== [[input_backup_configuration]] <<input_backup_configuration,backup_configuration>>
+
+Description: The following values can be configured:
+. `snapshot_cron` - Cron schedule to configure Longhorn automatic snapshots.
+. `snapshot_retention` - Retention of Longhorn automatic snapshots in days.
+. `backup_cron` - Cron schedule to configure Longhorn automatic backups.
+. `backup_retention` - Retention of Longhorn automatic backups in days.
+
+Type:
+[source,hcl]
+----
+object({
+    snapshot_cron      = string
+    snapshot_retention = number
+    backup_cron        = string
+    backup_retention   = number
+  })
+----
+
+Default:
+[source,json]
+----
+{
+  "backup_cron": "30 */12 * * *",
+  "backup_retention": "2",
+  "snapshot_cron": "0 */2 * * *",
+  "snapshot_retention": "1"
+}
+----
+
+==== [[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
+
+Description: Boolean to enable the deployment of a service monitor.
+
+Type: `bool`
+
+Default: `false`
+
+==== [[input_enable_dashboard_ingress]] <<input_enable_dashboard_ingress,enable_dashboard_ingress>>
+
+Description: Boolean to enable the creation of an ingress for the Longhorn's dashboard. **If enabled, you must provide a value for `base_domain`.**
+
+Type: `bool`
+
+Default: `false`
+
+==== [[input_enable_monitoring_dashboard]] <<input_enable_monitoring_dashboard,enable_monitoring_dashboard>>
+
+Description: Boolean to enable the provisioning of a Longhorn dashboard for Grafana.
+
+Type: `bool`
+
+Default: `true`
+
+==== [[input_oidc]] <<input_oidc,oidc>>
+
+Description: OIDC settings to configure OAuth2-Proxy which will be used to protect Longhorn's dashboard.
+
+Type:
+[source,hcl]
+----
+object({
+    issuer_url              = string
+    oauth_url               = optional(string, "")
+    token_url               = optional(string, "")
+    api_url                 = optional(string, "")
+    client_id               = string
+    client_secret           = string
+    oauth2_proxy_extra_args = optional(list(string), [])
+  })
+----
+
+Default: `null`
+
 === Outputs
 
 The following outputs are exported:
@@ -195,6 +470,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |===
 |Name |Version
 |[[requirement_argocd]] <<requirement_argocd,argocd>> |>= 4
+|[[requirement_random]] <<requirement_random,random>> |>= 3
 |[[requirement_utils]] <<requirement_utils,utils>> |>= 1
 |===
 
@@ -203,9 +479,10 @@ Description: ID to pass other modules in order to refer to this module as a depe
 [cols="a,a",options="header,autowidth"]
 |===
 |Name |Version
+|[[provider_random]] <<provider_random,random>> |>= 3
 |[[provider_null]] <<provider_null,null>> |n/a
-|[[provider_utils]] <<provider_utils,utils>> |>= 1
 |[[provider_argocd]] <<provider_argocd,argocd>> |>= 4
+|[[provider_utils]] <<provider_utils,utils>> |>= 1
 |===
 
 = Resources
@@ -217,6 +494,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |https://registry.terraform.io/providers/oboukili/argocd/latest/docs/resources/project[argocd_project.this] |resource
 |https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.dependencies] |resource
 |https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource[null_resource.this] |resource
+|https://registry.terraform.io/providers/random/latest/docs/resources/string[random_string.oauth2_cookie_secret] |resource
 |https://registry.terraform.io/providers/cloudposse/utils/latest/docs/data-sources/deep_merge_yaml[utils_deep_merge_yaml.values] |data source
 |===
 
@@ -258,7 +536,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |[[input_namespace]] <<input_namespace,namespace>>
 |Namespace where the applications's Kubernetes resources should be created. Namespace will be created in case it doesn't exist.
 |`string`
-|`"<NAMESPACE>"`
+|`"longhorn-system"`
 |no
 
 |[[input_helm_values]] <<input_helm_values,helm_values>>
@@ -297,6 +575,119 @@ object({
 |IDs of the other modules on which this module depends on.
 |`map(string)`
 |`{}`
+|no
+
+|[[input_storage_over_provisioning_percentage]] <<input_storage_over_provisioning_percentage,storage_over_provisioning_percentage>>
+|Set the storage over-provisioning percentage. **This values should be modified only when really needed.** The default is 200%, as https://longhorn.io/docs/1.3.1/best-practices/#minimal-available-storage-and-over-provisioning[recommended in the best practices] for single-disk nodes.
+|`number`
+|`200`
+|no
+
+|[[input_storage_minimal_available_percentage]] <<input_storage_minimal_available_percentage,storage_minimal_available_percentage>>
+|Set the minimal available storage percentage. **This values should be modified only when really needed.** The default is 25%, as https://longhorn.io/docs/1.3.1/best-practices/#minimal-available-storage-and-over-provisioning[recommended in the best practices] for single-disk nodes.
+|`number`
+|`25`
+|no
+
+|[[input_enable_pv_backups]] <<input_enable_pv_backups,enable_pv_backups>>
+|Boolean to enable backups of Longhorn volumes to an external object storage.
+|`bool`
+|`false`
+|no
+
+|[[input_set_default_storage_class]] <<input_set_default_storage_class,set_default_storage_class>>
+|Boolean to set the Storage Class with the backup configuration as the default for all Persistent Volumes.
+|`bool`
+|`true`
+|no
+
+|[[input_backup_storage]] <<input_backup_storage,backup_storage>>
+|Exoscale SOS bucket configuration where the backups will be stored. **This configuration is required if the variable `enable_pv_backups` is set to `true`.**
+|
+
+[source]
+----
+object({
+    bucket_name = string
+    region      = string
+    endpoint    = string
+    access_key  = string
+    secret_key  = string
+  })
+----
+
+|`null`
+|no
+
+|[[input_backup_configuration]] <<input_backup_configuration,backup_configuration>>
+|The following values can be configured:
+. `snapshot_cron` - Cron schedule to configure Longhorn automatic snapshots.
+. `snapshot_retention` - Retention of Longhorn automatic snapshots in days.
+. `backup_cron` - Cron schedule to configure Longhorn automatic backups.
+. `backup_retention` - Retention of Longhorn automatic backups in days.
+
+|
+
+[source]
+----
+object({
+    snapshot_cron      = string
+    snapshot_retention = number
+    backup_cron        = string
+    backup_retention   = number
+  })
+----
+
+|
+
+[source]
+----
+{
+  "backup_cron": "30 */12 * * *",
+  "backup_retention": "2",
+  "snapshot_cron": "0 */2 * * *",
+  "snapshot_retention": "1"
+}
+----
+
+|no
+
+|[[input_enable_service_monitor]] <<input_enable_service_monitor,enable_service_monitor>>
+|Boolean to enable the deployment of a service monitor.
+|`bool`
+|`false`
+|no
+
+|[[input_enable_dashboard_ingress]] <<input_enable_dashboard_ingress,enable_dashboard_ingress>>
+|Boolean to enable the creation of an ingress for the Longhorn's dashboard. **If enabled, you must provide a value for `base_domain`.**
+|`bool`
+|`false`
+|no
+
+|[[input_enable_monitoring_dashboard]] <<input_enable_monitoring_dashboard,enable_monitoring_dashboard>>
+|Boolean to enable the provisioning of a Longhorn dashboard for Grafana.
+|`bool`
+|`true`
+|no
+
+|[[input_oidc]] <<input_oidc,oidc>>
+|OIDC settings to configure OAuth2-Proxy which will be used to protect Longhorn's dashboard.
+|
+
+[source]
+----
+object({
+    issuer_url              = string
+    oauth_url               = optional(string, "")
+    token_url               = optional(string, "")
+    api_url                 = optional(string, "")
+    client_id               = string
+    client_secret           = string
+    oauth2_proxy_extra_args = optional(list(string), [])
+  })
+----
+
+|`null`
 |no
 
 |===

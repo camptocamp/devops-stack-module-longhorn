@@ -1,0 +1,34 @@
+{{- if $.Values.backups.enabled }}
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ $.Release.Name }}-backup
+  annotations:
+    storageclass.kubernetes.io/is-default-class: {{ $.Values.backups.defaultStorageClass | quote }}
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  dataLocality: "disabled"
+  numberOfReplicas: "3"
+  staleReplicaTimeout: "30"
+  fromBackup: ""
+  recurringJobs: '[
+    {
+      "name":"snapshot",
+      "task":"snapshot",
+      "cron": "{{ $.Values.backups.config.snapshot_cron }}",
+      "retain": {{ $.Values.backups.config.snapshot_retention }}
+    },
+    {
+      "name":"backup",
+      "task":"backup",
+      "cron": "{{ $.Values.backups.config.backup_cron }}",
+      "retain": {{ $.Values.backups.config.backup_retention }}
+    }
+  ]'
+
+{{- end }}
