@@ -1,0 +1,21 @@
+{{- if $.Values.ingress.enabled -}}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ $.Release.Name }}-oauth-service
+  labels:
+    app: {{ $.Release.Name }}
+spec:
+  selector:
+    app: oauth2-proxy
+    component: {{ $.Release.Name }}
+  type:  ClusterIP
+  ports:
+  - name: web
+    port: 9090
+    protocol: TCP
+    targetPort: 4180 
+
+{{- end -}}
