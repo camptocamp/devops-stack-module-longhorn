@@ -176,12 +176,12 @@ module "longhorn" {
 }
 ----
 
-== Restore volume backup
+=== Restoring volume backups
 
-- If your pod and his volume are still up, start by shuting down the pod (becareful to also stop the deployment/statefulset) and delete the volume using Longhorn UI.
-- Go to the backup tab of Longhorn UI and restore the desired volume backup. You must check the _"Use Previous Name"_ checkbox in order to keep the old volume name.
-- Next, go to the volume tab, select your newly restored volume and choose _"Create PV/PVC"_ option. Select _"Use Previous PVC"_ option and validate.
-- You can now restore your application which should attach the restored volume automatically.
+1. If your pod and his volume are still up, start by shuting down the pod (be careful to also stop the Deployment/StatefulSet) and delete the volume using the Longhorn Dashboard.
+2. Go to the backup tab of Longhorn Dashboard and restore the desired volume backup. You must check the _Use Previous Name_ checkbox in order to keep the old volume name.
+3. Next, go to the volume tab, select your newly restored volume and choose _Create PV/PVC_ option. Select _Use Previous PVC_ option and validate.
+4. You can now restore your application, which should attach the restored volume automatically.
 
 == Technical Reference
 
