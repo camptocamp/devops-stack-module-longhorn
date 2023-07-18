@@ -159,3 +159,20 @@ variable "oidc" {
   })
   default = null
 }
+
+variable "tolerations" {
+  description = <<-EOT
+    Tolerations to be added to the core Longhorn components that manage storage on nodes. **These tolerations are required if you want Longhorn to schedule storage on nodes that are tainted.**
+    
+    These settings only have an effect on the first deployment. If added at a later time, you need to also add them on the _Settings_ tab in the Longhorn Dashboard. Check the https://longhorn.io/docs/latest/advanced-resources/deploy/taint-toleration/[official documentation] for more detailed information.
+
+    **Only tolerations with the "Equal" operator are supported**, because the Longhorn Helm chart expects a parsed list as a string in the `defaultSettings.taintToleration` value.
+  EOT
+  type = list(object({
+    key      = string
+    operator = string
+    value    = string
+    effect   = string
+  }))
+  default = []
+}
