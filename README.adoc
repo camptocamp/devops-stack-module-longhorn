@@ -275,7 +275,7 @@ Description: Override of target revision of the application chart.
 
 Type: `string`
 
-Default: `"v1.0.0"`
+Default: `"v2.0.0"`
 
 ==== [[input_namespace]] <<input_namespace,namespace>>
 
@@ -449,6 +449,27 @@ object({
 
 Default: `null`
 
+==== [[input_tolerations]] <<input_tolerations,tolerations>>
+
+Description: Tolerations to be added to the core Longhorn components that manage storage on nodes. **These tolerations are required if you want Longhorn to schedule storage on nodes that are tainted.**  
+
+These settings only have an effect on the first deployment. If added at a later time, you need to also add them on the _Settings_ tab in the Longhorn Dashboard. Check the https://longhorn.io/docs/latest/advanced-resources/deploy/taint-toleration/[official documentation] for more detailed information.
+
+**Only tolerations with the "Equal" operator are supported**, because the Longhorn Helm chart expects a parsed list as a string in the `defaultSettings.taintToleration` value.
+
+Type:
+[source,hcl]
+----
+list(object({
+    key      = string
+    operator = string
+    value    = string
+    effect   = string
+  }))
+----
+
+Default: `[]`
+
 === Outputs
 
 The following outputs are exported:
@@ -480,9 +501,9 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |===
 |Name |Version
 |[[provider_random]] <<provider_random,random>> |>= 3
-|[[provider_null]] <<provider_null,null>> |n/a
 |[[provider_utils]] <<provider_utils,utils>> |>= 1
 |[[provider_argocd]] <<provider_argocd,argocd>> |>= 5
+|[[provider_null]] <<provider_null,null>> |n/a
 |===
 
 = Resources
@@ -530,7 +551,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |[[input_target_revision]] <<input_target_revision,target_revision>>
 |Override of target revision of the application chart.
 |`string`
-|`"v1.0.0"`
+|`"v2.0.0"`
 |no
 
 |[[input_namespace]] <<input_namespace,namespace>>
@@ -688,6 +709,28 @@ object({
 ----
 
 |`null`
+|no
+
+|[[input_tolerations]] <<input_tolerations,tolerations>>
+|Tolerations to be added to the core Longhorn components that manage storage on nodes. **These tolerations are required if you want Longhorn to schedule storage on nodes that are tainted.**
+    
+These settings only have an effect on the first deployment. If added at a later time, you need to also add them on the _Settings_ tab in the Longhorn Dashboard. Check the https://longhorn.io/docs/latest/advanced-resources/deploy/taint-toleration/[official documentation] for more detailed information.
+
+**Only tolerations with the "Equal" operator are supported**, because the Longhorn Helm chart expects a parsed list as a string in the `defaultSettings.taintToleration` value.
+
+|
+
+[source]
+----
+list(object({
+    key      = string
+    operator = string
+    value    = string
+    effect   = string
+  }))
+----
+
+|`[]`
 |no
 
 |===
