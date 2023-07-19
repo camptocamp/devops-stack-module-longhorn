@@ -2,6 +2,11 @@ locals {
   domain      = format("longhorn.apps.%s", var.base_domain)
   domain_full = format("longhorn.apps.%s.%s", var.cluster_name, var.base_domain)
 
+  # Generate a list of tolerations in a string format of `key=value:effect` for all the tolerations that have 
+  # an `operator` equal to `Equal`. This list of strings will be joined to pass as the value of 
+  # `defaultSettings.taintToleration`.
+  tolerations_list = [for toleration in var.tolerations : "${toleration.key}=${toleration.value}:${toleration.effect}" if toleration.operator == "Equal"]
+
   helm_values = [{
     longhorn = {
       defaultSettings = {
@@ -10,9 +15,13 @@ locals {
         defaultLonghornStaticStorageClass = var.enable_pv_backups && var.set_default_storage_class ? "longhorn-backup" : "longhorn-static"
         storageOverProvisioningPercentage = var.storage_over_provisioning_percentage
         storageMinimalAvailablePercentage = var.storage_minimal_available_percentage
+        taintToleration                   = join(";", local.tolerations_list)
       }
       persistence = {
         defaultClass = var.enable_pv_backups && var.set_default_storage_class ? "false" : "true"
+      }
+      longhornManager = {
+        tolerations = var.tolerations
       }
     }
     backups = merge({
