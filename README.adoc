@@ -1,6 +1,6 @@
 = devops-stack-module-longhorn
 // Document attributes to replace along the document
-:chart-version: 1.4.2
+:longhorn-chart-version: 1.4.2
 :original-repo-url: https://github.com/longhorn/longhorn
 
 A https://devops-stack.io[DevOps Stack] module to deploy and configure https://longhorn.io/[Longhorn].
@@ -10,7 +10,7 @@ The Longhorn chart used by this module is shipped in this repository as well, in
 [cols="1,1,1",options="autowidth,header"]
 |===
 |Current Chart Version |Original Repository |Default Values
-|*{chart-version}* |{original-repo-url}/tree/master/chart[Chart] | https://artifacthub.io/packages/helm/longhorn/longhorn/{chart-version}?modal=values[`values.yaml`]
+|*{longhorn-chart-version}* |{original-repo-url}/tree/master/chart[Chart] | https://artifacthub.io/packages/helm/longhorn/longhorn/{chart-version}?modal=values[`values.yaml`]
 |===
 
 IMPORTANT: For the moment, this module only supports the deployment of Longhorn in SKS clusters.
