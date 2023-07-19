@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v2.0.0...v2.1.0) (2023-07-19)
+
+
+### Features
+
+* add toleration variable to deploy Longhorn on tainted nodes ([#8](https://github.com/camptocamp/devops-stack-module-longhorn/issues/8)) ([d8f458c](https://github.com/camptocamp/devops-stack-module-longhorn/commit/d8f458c9882fb1166fbc953aff8973fdd437d49e))
+
 ## [2.0.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v1.0.0...v2.0.0) (2023-07-11)
 
 
