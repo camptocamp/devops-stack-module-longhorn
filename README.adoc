@@ -35,7 +35,7 @@ module "longhorn" {
 }
 ----
 
-You can enable the ingress to the Longhorn Dashboard. In that case, you will need to enable the respective flag and pass along the require OIDC configuration:
+You can enable the ingress to the Longhorn Dashboard. In that case, you will need to enable the respective flag and pass along the required OIDC configuration:
 
 [source,terraform]
 ----
@@ -59,7 +59,7 @@ module "longhorn" {
   }
 ----
 
-NOTE: The previous example uses xref:keycloak:ROOT:README.adoc[Keycloak] as an OIDC provider, but you can any other you want.
+NOTE: The previous example uses xref:keycloak:ROOT:README.adoc[Keycloak] as an OIDC provider, but you can use any other you want.
 
 In case you want to backup the content of the persistent volumes, you have the possibility of enabling the backup feature. In that case, you will need to enable the respective flag and pass along the require S3 configuration:
 
