@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v2.1.0...v2.1.1) (2023-08-09)
+
+
+### Bug Fixes
+
+* readd support to deactivate auto-sync which was broken by [#6](https://github.com/camptocamp/devops-stack-module-longhorn/issues/6) ([8e26944](https://github.com/camptocamp/devops-stack-module-longhorn/commit/8e2694417da0c30881f8a4a0a5759cb56f5c664c))
+
 ## [2.1.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v2.0.0...v2.1.0) (2023-07-19)
 
 
