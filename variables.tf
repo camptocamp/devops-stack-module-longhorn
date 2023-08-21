@@ -69,9 +69,9 @@ variable "dependency_ids" {
 #######################
 
 variable "storage_over_provisioning_percentage" {
-  description = "Set the storage over-provisioning percentage. **This values should be modified only when really needed.** The default is 200%, as https://longhorn.io/docs/1.3.1/best-practices/#minimal-available-storage-and-over-provisioning[recommended in the best practices] for single-disk nodes."
+  description = "Set the storage over-provisioning percentage. **This values should be modified only when really needed.**"
   type        = number
-  default     = 200
+  default     = 100
 }
 
 variable "storage_minimal_available_percentage" {
@@ -107,22 +107,30 @@ variable "backup_storage" {
 variable "backup_configuration" {
   description = <<-EOT
     The following values can be configured:
+    . `snapshot_enabled` - Enable Longhorn automatic snapshots.
     . `snapshot_cron` - Cron schedule to configure Longhorn automatic snapshots.
     . `snapshot_retention` - Retention of Longhorn automatic snapshots in days.
+    . `backup_enabled` - Enable Longhorn automatic backups to object storage.
     . `backup_cron` - Cron schedule to configure Longhorn automatic backups.
     . `backup_retention` - Retention of Longhorn automatic backups in days.
+
+    /!\ These settings cannot be changed after StorageClass creation without having to recreate it!
   EOT
 
   type = object({
+    snapshot_enabled   = bool
     snapshot_cron      = string
     snapshot_retention = number
+    backup_enabled     = bool
     backup_cron        = string
     backup_retention   = number
   })
 
   default = {
+    snapshot_enabled   = false
     snapshot_cron      = "0 */2 * * *"
     snapshot_retention = "1"
+    backup_enabled     = false
     backup_cron        = "30 */12 * * *"
     backup_retention   = "2"
   }
@@ -160,10 +168,16 @@ variable "oidc" {
   default = null
 }
 
+variable "replica_count" {
+  description = "Amount of replicas created by Longhorn for each volume."
+  type        = number
+  default     = 2
+}
+
 variable "tolerations" {
   description = <<-EOT
     Tolerations to be added to the core Longhorn components that manage storage on nodes. **These tolerations are required if you want Longhorn to schedule storage on nodes that are tainted.**
-    
+
     These settings only have an effect on the first deployment. If added at a later time, you need to also add them on the _Settings_ tab in the Longhorn Dashboard. Check the https://longhorn.io/docs/latest/advanced-resources/deploy/taint-toleration/[official documentation] for more detailed information.
 
     **Only tolerations with the "Equal" operator are supported**, because the Longhorn Helm chart expects a parsed list as a string in the `defaultSettings.taintToleration` value.

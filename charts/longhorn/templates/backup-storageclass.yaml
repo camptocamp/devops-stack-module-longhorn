@@ -13,22 +13,29 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 parameters:
   dataLocality: "disabled"
-  numberOfReplicas: "3"
+  numberOfReplicas: {{ $.Values.numberOfReplicas | quote }}
   staleReplicaTimeout: "30"
   fromBackup: ""
   recurringJobs: '[
+    {{- if $.Values.backups.config.snapshot_enabled }}
     {
       "name":"snapshot",
       "task":"snapshot",
       "cron": "{{ $.Values.backups.config.snapshot_cron }}",
       "retain": {{ $.Values.backups.config.snapshot_retention }}
-    },
+    }
+    {{- end -}}
+    {{- if and $.Values.backups.config.backup_enabled $.Values.backups.config.snapshot_enabled -}}
+    ,
+    {{ end -}}
+    {{- if $.Values.backups.config.backup_enabled -}}
     {
       "name":"backup",
       "task":"backup",
       "cron": "{{ $.Values.backups.config.backup_cron }}",
       "retain": {{ $.Values.backups.config.backup_retention }}
     }
+    {{- end }}
   ]'
 
 {{- end }}
