@@ -18,7 +18,8 @@ locals {
         taintToleration                   = join(";", local.tolerations_list)
       }
       persistence = {
-        defaultClass = var.enable_pv_backups && var.set_default_storage_class ? "false" : "true"
+        defaultClass             = var.enable_pv_backups && var.set_default_storage_class ? "false" : "true"
+        defaultClassReplicaCount = var.replica_count
       }
       longhornManager = {
         tolerations = var.tolerations
@@ -31,6 +32,7 @@ locals {
       config              = var.backup_configuration
       storage             = var.backup_storage
     } : null)
+    numberOfReplicas = var.replica_count
     oidc = var.oidc != null ? {
       oauth2_proxy_image      = "quay.io/oauth2-proxy/oauth2-proxy:v7.4.0"
       issuer_url              = var.oidc.issuer_url
