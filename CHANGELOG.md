@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v2.1.1...v2.2.0) (2023-08-23)
+
+
+### Features
+
+* parameterize backup and replicas settings and tweak default values ([9ba0c11](https://github.com/camptocamp/devops-stack-module-longhorn/commit/9ba0c115521edda46e82a11138bc0fc56cfafa0a))
+
 ## [2.1.1](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v2.1.0...v2.1.1) (2023-08-09)
 
 
