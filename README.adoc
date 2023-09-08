@@ -216,11 +216,11 @@ The following providers are used by this module:
 
 - [[provider_random]] <<provider_random,random>> (>= 3)
 
-- [[provider_utils]] <<provider_utils,utils>> (>= 1)
+- [[provider_null]] <<provider_null,null>>
 
 - [[provider_argocd]] <<provider_argocd,argocd>> (>= 5)
 
-- [[provider_null]] <<provider_null,null>>
+- [[provider_utils]] <<provider_utils,utils>> (>= 1)
 
 === Resources
 
@@ -275,7 +275,7 @@ Description: Override of target revision of the application chart.
 
 Type: `string`
 
-Default: `"v2.1.1"`
+Default: `"v2.2.0"`
 
 ==== [[input_namespace]] <<input_namespace,namespace>>
 
@@ -567,7 +567,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |[[input_target_revision]] <<input_target_revision,target_revision>>
 |Override of target revision of the application chart.
 |`string`
-|`"v2.1.1"`
+|`"v2.2.0"`
 |no
 
 |[[input_namespace]] <<input_namespace,namespace>>
