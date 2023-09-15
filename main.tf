@@ -41,6 +41,10 @@ resource "argocd_application" "this" {
   metadata {
     name      = var.destination_cluster != "in-cluster" ? "longhorn-${var.destination_cluster}" : "longhorn"
     namespace = var.argocd_namespace
+    labels = merge({
+      "application" = "longhorn"
+      "cluster"     = var.destination_cluster
+    }, var.argocd_labels)
   }
 
   timeouts {
