@@ -149,7 +149,7 @@ module "longhorn" {
   }]
 
   dependency_ids = {
-    argocd = module.argocd_bootstrap.id
+    argocd       = module.argocd_bootstrap.id
     traefik      = module.traefik.id
     cert-manager = module.cert-manager.id
     keycloak     = module.keycloak.id
