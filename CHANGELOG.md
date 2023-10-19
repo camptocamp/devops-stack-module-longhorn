@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.3.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v2.2.0...v2.3.0) (2023-10-19)
+
+
+### Features
+
+* add standard variables and variable to add labels to Argo CD app ([8ec1b98](https://github.com/camptocamp/devops-stack-module-longhorn/commit/8ec1b9855973a15651ddefa6f31d1453a943e791))
+* add variables to set AppProject and destination cluster ([74d6627](https://github.com/camptocamp/devops-stack-module-longhorn/commit/74d662701c6c1df3dfb94108c44c3a7ff0671663))
+* update OAuth2-Proxy version ([a817040](https://github.com/camptocamp/devops-stack-module-longhorn/commit/a8170407ee7fb94a4aec018ae51397ce00127f36))
+
 ## [2.2.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v2.1.1...v2.2.0) (2023-08-23)
 
 
