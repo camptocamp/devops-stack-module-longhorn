@@ -7,10 +7,7 @@ resource "argocd_project" "this" {
 
   metadata {
     name      = var.destination_cluster != "in-cluster" ? "longhorn-${var.destination_cluster}" : "longhorn"
-    namespace = var.argocd_namespace
-    annotations = {
-      "devops-stack.io/argocd_namespace" = var.argocd_namespace
-    }
+    namespace = "argocd"
   }
 
   spec {
@@ -40,7 +37,7 @@ data "utils_deep_merge_yaml" "values" {
 resource "argocd_application" "this" {
   metadata {
     name      = var.destination_cluster != "in-cluster" ? "longhorn-${var.destination_cluster}" : "longhorn"
-    namespace = var.argocd_namespace
+    namespace = "argocd"
     labels = merge({
       "application" = "longhorn"
       "cluster"     = var.destination_cluster
