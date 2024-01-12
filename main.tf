@@ -19,7 +19,7 @@ resource "argocd_project" "this" {
 
     destination {
       name      = var.destination_cluster
-      namespace = var.namespace
+      namespace = "longhorn-system"
     }
 
     orphaned_resources {
@@ -68,7 +68,7 @@ resource "argocd_application" "this" {
 
     destination {
       name      = var.destination_cluster
-      namespace = var.namespace
+      namespace = "longhorn-system"
     }
 
     sync_policy {
