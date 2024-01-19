@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v2.3.0...v3.0.0) (2024-01-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* hardcode the release name to remove the destination cluster
+* remove the ArgoCD namespace variable
+* remove the namespace variable
+
+### Bug Fixes
+
+* change the default cluster issuer ([c09df57](https://github.com/camptocamp/devops-stack-module-longhorn/commit/c09df5777c5f857fcc91f9cb1c0276f2a5a14718))
+* hardcode the release name to remove the destination cluster ([1759d38](https://github.com/camptocamp/devops-stack-module-longhorn/commit/1759d38d231a17177d24d3814be91aa9cb650949))
+* remove the ArgoCD namespace variable ([2893a68](https://github.com/camptocamp/devops-stack-module-longhorn/commit/2893a682d2942cba53f630c8db8dee26abbe2262))
+* remove the namespace variable ([841175e](https://github.com/camptocamp/devops-stack-module-longhorn/commit/841175e4a78fc2db9ebf0638d0d71f8a2f10dc7f))
+
 ## [2.3.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v2.2.0...v2.3.0) (2023-10-19)
 
 
