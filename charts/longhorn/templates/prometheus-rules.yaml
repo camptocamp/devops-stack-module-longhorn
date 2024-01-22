@@ -19,6 +19,9 @@ spec:
       for: 5m
       labels:
         severity: warning
+        {{- with $.Values.servicemonitor.additionalAlertLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     - alert: LonghornVolumeStatusCritical
       annotations:
         description: {{"Longhorn volume {{$labels.volume}} on {{$labels.node}} is Fault for more than 2 minutes."}}
@@ -27,6 +30,9 @@ spec:
       for: 5m
       labels:
         severity: critical
+        {{- with $.Values.servicemonitor.additionalAlertLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     - alert: LonghornVolumeStatusWarning
       annotations:
         description: {{"Longhorn volume {{$labels.volume}} on {{$labels.node}} is Degraded for more than 5 minutes."}}
@@ -35,6 +41,9 @@ spec:
       for: 5m
       labels:
         severity: warning
+        {{- with $.Values.servicemonitor.additionalAlertLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     - alert: LonghornNodeStorageWarning
       annotations:
         description: {{"The used storage of node {{$labels.node}} is at {{$value}}% capacity for more than 5 minutes."}}
@@ -43,6 +52,9 @@ spec:
       for: 5m
       labels:
         severity: warning
+        {{- with $.Values.servicemonitor.additionalAlertLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     - alert: LonghornDiskStorageWarning
       annotations:
         description: {{"The used storage of disk {{$labels.disk}} on node {{$labels.node}} is at {{$value}}% capacity for more than 5 minutes."}}
@@ -51,6 +63,9 @@ spec:
       for: 5m
       labels:
         severity: warning
+        {{- with $.Values.servicemonitor.additionalAlertLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     - alert: LonghornNodeDown
       annotations:
         description: {{"There are {{$value}} Longhorn nodes which have been offline for more than 5 minutes."}}
@@ -59,6 +74,9 @@ spec:
       for: 5m
       labels:
         severity: critical
+        {{- with $.Values.servicemonitor.additionalAlertLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     - alert: LonghornIntanceManagerCPUUsageWarning
       annotations:
         description: {{"Longhorn instance manager {{$labels.instance_manager}} on {{$labels.node}} has CPU Usage / CPU request is {{$value}}% for more than 5 minutes."}}
@@ -67,6 +85,9 @@ spec:
       for: 5m
       labels:
         severity: warning
+        {{- with $.Values.servicemonitor.additionalAlertLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
     - alert: LonghornNodeCPUUsageWarning
       annotations:
         description: {{"Longhorn node {{$labels.node}} has CPU Usage / CPU capacity is {{$value}}% for more than 5 minutes."}}
@@ -75,5 +96,8 @@ spec:
       for: 5m
       labels:
         severity: warning
+        {{- with $.Values.servicemonitor.additionalAlertLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
 
 {{- end -}}

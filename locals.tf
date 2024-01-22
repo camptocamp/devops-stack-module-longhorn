@@ -69,6 +69,7 @@ locals {
     }
     servicemonitor = {
       enabled = var.enable_service_monitor
+      additionalAlertLabels = var.additional_alert_labels
     }
     automaticFilesystemTrim = {
       enabled   = var.automatic_filesystem_trim.enabled
