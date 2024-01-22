@@ -154,6 +154,12 @@ variable "enable_service_monitor" {
   default     = false
 }
 
+variable "additional_alert_labels" {
+  description = "Additional labels to add to Longhorn alerts."
+  type        = map(string)
+  default     = {}
+}
+
 variable "enable_dashboard_ingress" {
   description = "Boolean to enable the creation of an ingress for the Longhorn's dashboard. **If enabled, you must provide a value for `base_domain`.**"
   type        = bool
