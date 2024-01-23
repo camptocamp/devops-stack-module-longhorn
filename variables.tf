@@ -180,6 +180,29 @@ variable "oidc" {
   default = null
 }
 
+variable "automatic_filesystem_trim" {
+  description = "Settings to enable and configure automatic filesystem trim of volumes managed by Longhorn."
+  type = object({
+    enabled   = bool
+    cron      = string
+    job_group = string
+  })
+  default = {
+    enabled   = false
+    cron      = "0 6 * * *"
+    job_group = ""
+  }
+}
+
+variable "recurring_job_selectors" {
+  description = "Define a group list to add to recurring job selector for the default storage class (the custom backup one if `set_default_storage_class` is set or else the Longhorn default one)."
+  type = list(object({
+    name    = string
+    isGroup = bool
+  }))
+  default = null
+}
+
 variable "replica_count" {
   description = "Amount of replicas created by Longhorn for each volume."
   type        = number

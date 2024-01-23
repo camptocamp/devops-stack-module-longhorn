@@ -2,8 +2,8 @@ locals {
   domain      = format("longhorn.apps.%s", var.base_domain)
   domain_full = format("longhorn.apps.%s.%s", var.cluster_name, var.base_domain)
 
-  # Generate a list of tolerations in a string format of `key=value:effect` for all the tolerations that have 
-  # an `operator` equal to `Equal`. This list of strings will be joined to pass as the value of 
+  # Generate a list of tolerations in a string format of `key=value:effect` for all the tolerations that have
+  # an `operator` equal to `Equal`. This list of strings will be joined to pass as the value of
   # `defaultSettings.taintToleration`.
   tolerations_list = [for toleration in var.tolerations : "${toleration.key}=${toleration.value}:${toleration.effect}" if toleration.operator == "Equal"]
 
@@ -18,8 +18,12 @@ locals {
         taintToleration                   = join(";", local.tolerations_list)
       }
       persistence = {
-        defaultClass             = var.enable_pv_backups && var.set_default_storage_class ? "false" : "true"
+        defaultClass             = tostring(var.enable_pv_backups && var.set_default_storage_class)
         defaultClassReplicaCount = var.replica_count
+        recurringJobSelector = {
+          enable  = tostring(var.automatic_filesystem_trim.enabled && !var.set_default_storage_class)
+          jobList = var.automatic_filesystem_trim.enabled && !var.set_default_storage_class && var.recurring_job_selectors != null ? jsonencode(var.recurring_job_selectors) : null
+        }
       }
       longhornManager = {
         tolerations = var.tolerations
@@ -66,6 +70,12 @@ locals {
     servicemonitor = {
       enabled = var.enable_service_monitor
     }
+    automaticFilesystemTrim = {
+      enabled   = var.automatic_filesystem_trim.enabled
+      cron      = var.automatic_filesystem_trim.cron
+      job_group = var.automatic_filesystem_trim.job_group
+    }
+    recurringJobSelector = var.automatic_filesystem_trim.enabled && var.enable_pv_backups && var.set_default_storage_class && var.recurring_job_selectors != null ? jsonencode(var.recurring_job_selectors) : null
   }]
 }
 
