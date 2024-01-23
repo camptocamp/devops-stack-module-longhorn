@@ -1,0 +1,24 @@
+{{- if $.Values.automaticFilesystemTrim.enabled -}}
+
+---
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: {{ $.Release.Name }}-filesystem-trim
+  labels:
+    name: {{ $.Release.Name }}-filesystem-trim
+spec:
+  concurrency: 1
+  cron: {{ $.Values.automaticFilesystemTrim.cron | quote }}
+  {{- if and ($.Values.automaticFilesystemTrim.jobGroup) (ne $.Values.automaticFilesystemTrim.jobGroup "") }}
+  groups:
+    - {{ $.Values.automaticFilesystemTrim.jobGroup | quote }}
+  {{- else }}
+  groups: []
+  {{- end }}
+  labels: {}
+  name: fs-trim
+  retain: 0
+  task: filesystem-trim
+
+{{- end -}}

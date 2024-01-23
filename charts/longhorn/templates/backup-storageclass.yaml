@@ -16,6 +16,12 @@ parameters:
   numberOfReplicas: {{ $.Values.numberOfReplicas | quote }}
   staleReplicaTimeout: "30"
   fromBackup: ""
+  {{- if $.Values.recurringJobSelector }}
+  recurringJobSelector: 
+  {{- with $.Values.recurringJobSelector }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
   recurringJobs: '[
     {{- if $.Values.backups.config.snapshot_enabled }}
     {
