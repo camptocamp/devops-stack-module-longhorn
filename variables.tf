@@ -142,6 +142,12 @@ variable "backup_configuration" {
   }
 }
 
+variable "enable_preupgrade_check" {
+  description = "Boolean to enable the pre-upgrade check. Usually this value should be set to `true` and only set to `false` if you are bootstrapping a new cluster, otherwise the first deployment will not work."
+  type        = bool
+  default     = true
+}
+
 variable "enable_service_monitor" {
   description = "Boolean to enable the deployment of a service monitor."
   type        = bool
