@@ -291,7 +291,7 @@ Description: Override of target revision of the application chart.
 
 Type: `string`
 
-Default: `"v3.0.0"`
+Default: `"v3.1.0"`
 
 ==== [[input_helm_values]] <<input_helm_values,helm_values>>
 
@@ -473,6 +473,45 @@ object({
 
 Default: `null`
 
+==== [[input_automatic_filesystem_trim]] <<input_automatic_filesystem_trim,automatic_filesystem_trim>>
+
+Description: Settings to enable and configure automatic filesystem trim of volumes managed by Longhorn.
+
+Type:
+[source,hcl]
+----
+object({
+    enabled   = bool
+    cron      = string
+    job_group = string
+  })
+----
+
+Default:
+[source,json]
+----
+{
+  "cron": "0 6 * * *",
+  "enabled": false,
+  "job_group": ""
+}
+----
+
+==== [[input_recurring_job_selectors]] <<input_recurring_job_selectors,recurring_job_selectors>>
+
+Description: Define a group list to add to recurring job selector for the default storage class (the custom backup one if `set_default_storage_class` is set or else the Longhorn default one).
+
+Type:
+[source,hcl]
+----
+list(object({
+    name    = string
+    isGroup = bool
+  }))
+----
+
+Default: `null`
+
 ==== [[input_replica_count]] <<input_replica_count,replica_count>>
 
 Description: Amount of replicas created by Longhorn for each volume.
@@ -595,7 +634,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |[[input_target_revision]] <<input_target_revision,target_revision>>
 |Override of target revision of the application chart.
 |`string`
-|`"v3.0.0"`
+|`"v3.1.0"`
 |no
 
 |[[input_helm_values]] <<input_helm_values,helm_values>>
@@ -758,6 +797,47 @@ object({
     client_secret           = string
     oauth2_proxy_extra_args = optional(list(string), [])
   })
+----
+
+|`null`
+|no
+
+|[[input_automatic_filesystem_trim]] <<input_automatic_filesystem_trim,automatic_filesystem_trim>>
+|Settings to enable and configure automatic filesystem trim of volumes managed by Longhorn.
+|
+
+[source]
+----
+object({
+    enabled   = bool
+    cron      = string
+    job_group = string
+  })
+----
+
+|
+
+[source]
+----
+{
+  "cron": "0 6 * * *",
+  "enabled": false,
+  "job_group": ""
+}
+----
+
+|no
+
+|[[input_recurring_job_selectors]] <<input_recurring_job_selectors,recurring_job_selectors>>
+|Define a group list to add to recurring job selector for the default storage class (the custom backup one if `set_default_storage_class` is set or else the Longhorn default one).
+|
+
+[source]
+----
+list(object({
+    name    = string
+    isGroup = bool
+  }))
 ----
 
 |`null`
