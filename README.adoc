@@ -437,6 +437,14 @@ Type: `bool`
 
 Default: `false`
 
+==== [[input_additional_alert_labels]] <<input_additional_alert_labels,additional_alert_labels>>
+
+Description: Additional labels to add to Longhorn alerts.
+
+Type: `map(string)`
+
+Default: `{}`
+
 ==== [[input_enable_dashboard_ingress]] <<input_enable_dashboard_ingress,enable_dashboard_ingress>>
 
 Description: Boolean to enable the creation of an ingress for the Longhorn's dashboard. **If enabled, you must provide a value for `base_domain`.**
@@ -768,6 +776,12 @@ object({
 |Boolean to enable the deployment of a service monitor.
 |`bool`
 |`false`
+|no
+
+|[[input_additional_alert_labels]] <<input_additional_alert_labels,additional_alert_labels>>
+|Additional labels to add to Longhorn alerts.
+|`map(string)`
+|`{}`
 |no
 
 |[[input_enable_dashboard_ingress]] <<input_enable_dashboard_ingress,enable_dashboard_ingress>>
