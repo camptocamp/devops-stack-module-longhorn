@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.2.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.1.0...v3.2.0) (2024-01-26)
+
+
+### Features
+
+* add automatic filesystem trim feature using recurringjob ([8c3647c](https://github.com/camptocamp/devops-stack-module-longhorn/commit/8c3647cbe6c285ccfee8ab96b0681da9ae7b7102))
+* add variable for additional alerts labels ([9dbf9aa](https://github.com/camptocamp/devops-stack-module-longhorn/commit/9dbf9aafbf571198a8c6e98cb5a6b482c9603093))
+
 ## [3.1.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.0.0...v3.1.0) (2024-01-25)
 
 
