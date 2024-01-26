@@ -18,7 +18,7 @@ locals {
         taintToleration                   = join(";", local.tolerations_list)
       }
       persistence = {
-        defaultClass             = tostring(var.enable_pv_backups && var.set_default_storage_class)
+        defaultClass             = tostring(!(var.enable_pv_backups && var.set_default_storage_class))
         defaultClassReplicaCount = var.replica_count
         recurringJobSelector = {
           enable  = tostring(var.automatic_filesystem_trim.enabled && !var.set_default_storage_class)
@@ -68,7 +68,7 @@ locals {
       enabled = var.enable_monitoring_dashboard
     }
     servicemonitor = {
-      enabled = var.enable_service_monitor
+      enabled               = var.enable_service_monitor
       additionalAlertLabels = var.additional_alert_labels
     }
     automaticFilesystemTrim = {
