@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.2.0...v3.2.1) (2024-01-26)
+
+
+### Bug Fixes
+
+* conditional issue with persistence defaultClass helm variable ([#25](https://github.com/camptocamp/devops-stack-module-longhorn/issues/25)) ([f879d01](https://github.com/camptocamp/devops-stack-module-longhorn/commit/f879d016831f21fe7665c34ecccb2f7939959338))
+
 ## [3.2.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.1.0...v3.2.0) (2024-01-26)
 
 
