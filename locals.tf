@@ -1,6 +1,6 @@
 locals {
-  domain      = format("longhorn.apps.%s", var.base_domain)
-  domain_full = format("longhorn.apps.%s.%s", var.cluster_name, var.base_domain)
+  domain      = format("longhorn.%s", trimprefix("${var.subdomain}.${var.base_domain}", "."))
+  domain_full = format("longhorn.%s.%s", trimprefix("${var.subdomain}.${var.cluster_name}", "."), var.base_domain)
 
   # Generate a list of tolerations in a string format of `key=value:effect` for all the tolerations that have
   # an `operator` equal to `Equal`. This list of strings will be joined to pass as the value of
