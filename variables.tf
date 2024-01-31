@@ -14,6 +14,12 @@ variable "base_domain" {
   default     = null
 }
 
+variable "subdomain" {
+  description = "Sub domain of the cluster. Value used for the ingress' URL of the application."
+  type        = string
+  default     = "apps"
+}
+
 variable "cluster_issuer" {
   description = "SSL certificate issuer to use. Usually you would configure this value as `letsencrypt-staging` or `letsencrypt-prod` on your root `*.tf` files."
   type        = string
