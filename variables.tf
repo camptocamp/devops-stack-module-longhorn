@@ -18,6 +18,7 @@ variable "subdomain" {
   description = "Subdomain of the cluster. Value used for the ingress' URL of the application."
   type        = string
   default     = "apps"
+  nullable    = false
 }
 
 variable "cluster_issuer" {
