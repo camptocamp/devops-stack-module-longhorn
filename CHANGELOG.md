@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.3.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.2.1...v3.3.0) (2024-02-23)
+
+
+### Features
+
+* add a subdomain variable ([0515a54](https://github.com/camptocamp/devops-stack-module-longhorn/commit/0515a5495cf7bb4e412d7ffc68dd23789711c6fd))
+
+
+### Bug Fixes
+
+* make subdomain variable non-nullable ([9e98d8c](https://github.com/camptocamp/devops-stack-module-longhorn/commit/9e98d8c350ae29d38880f268aaae7c892a9d9490))
+* remove annotation for the redirection middleware ([a1ed297](https://github.com/camptocamp/devops-stack-module-longhorn/commit/a1ed2978e6bddf3adf0c51c56da176c44d3297a6))
+
 ## [3.2.1](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.2.0...v3.2.1) (2024-01-26)
 
 
