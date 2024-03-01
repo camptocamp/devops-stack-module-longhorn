@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.3.0...v3.3.1) (2024-03-01)
+
+
+### Bug Fixes
+
+* remove legacy ingress annotations ([c1613f6](https://github.com/camptocamp/devops-stack-module-longhorn/commit/c1613f6a03f160ac13b6962b351622f328709cd7))
+
 ## [3.3.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.2.1...v3.3.0) (2024-02-23)
 
 
