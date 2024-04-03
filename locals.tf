@@ -28,8 +28,8 @@ locals {
       longhornManager = {
         tolerations = var.tolerations
       }
-      helmPreUpgradeCheckerJob = {
-        enabled = var.enable_preupgrade_check
+      preUpgradeChecker = {
+        jobEnabled = var.enable_preupgrade_check
       }
     }
     backups = merge({
