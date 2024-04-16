@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.5.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.4.0...v3.5.0) (2024-04-16)
+
+
+### Features
+
+* upgrade OAuth Proxy image version ([6e6ce6f](https://github.com/camptocamp/devops-stack-module-longhorn/commit/6e6ce6fa0675fdda3b730fc40f32e3e865de2050))
+
+
+### Bug Fixes
+
+* fix upgrade check which was broken by the chart v1.6.0 ([72d6223](https://github.com/camptocamp/devops-stack-module-longhorn/commit/72d62232b4055eb54ba80aec16b813d6f24a55da))
+
 ## [3.4.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.3.1...v3.4.0) (2024-03-01)
 
 
