@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.6.0...v3.7.0) (2024-08-20)
+
+
+### Features
+
+* **chart:** minor update of dependencies on longhorn chart ([#37](https://github.com/camptocamp/devops-stack-module-longhorn/issues/37)) ([83c1de8](https://github.com/camptocamp/devops-stack-module-longhorn/commit/83c1de8a3050fac269e98aac244f1544dfa2a178))
+
 ## [3.6.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.5.0...v3.6.0) (2024-06-18)
 
 
