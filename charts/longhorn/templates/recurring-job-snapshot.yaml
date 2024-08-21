@@ -1,0 +1,20 @@
+{{- if $.Values.backups.enabled -}}
+{{- if $.Values.backups.config.snapshot_enabled -}}
+
+---
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: {{ $.Release.Name }}-snapshot
+  labels:
+    name: {{ $.Release.Name }}-snapshot
+spec:
+  concurrency: 1
+  cron: {{ $.Values.backups.config.snapshot_cron | quote }}
+  labels: {}
+  name: backup
+  retain: {{ $.Values.backups.config.snapshot_retention }}
+  task: backup
+
+{{- end -}}
+{{- end -}}
