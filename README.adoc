@@ -216,11 +216,11 @@ The following providers are used by this module:
 
 - [[provider_random]] <<provider_random,random>> (>= 3)
 
-- [[provider_utils]] <<provider_utils,utils>> (>= 1)
+- [[provider_null]] <<provider_null,null>>
 
 - [[provider_argocd]] <<provider_argocd,argocd>> (>= 5)
 
-- [[provider_null]] <<provider_null,null>>
+- [[provider_utils]] <<provider_utils,utils>> (>= 1)
 
 === Resources
 
@@ -299,7 +299,7 @@ Description: Override of target revision of the application chart.
 
 Type: `string`
 
-Default: `"v3.4.0"`
+Default: `"v3.7.0"`
 
 ==== [[input_helm_values]] <<input_helm_values,helm_values>>
 
@@ -588,8 +588,8 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |===
 |Name |Version
 |[[provider_random]] <<provider_random,random>> |>= 3
-|[[provider_utils]] <<provider_utils,utils>> |>= 1
 |[[provider_argocd]] <<provider_argocd,argocd>> |>= 5
+|[[provider_utils]] <<provider_utils,utils>> |>= 1
 |[[provider_null]] <<provider_null,null>> |n/a
 |===
 
@@ -656,7 +656,7 @@ Description: ID to pass other modules in order to refer to this module as a depe
 |[[input_target_revision]] <<input_target_revision,target_revision>>
 |Override of target revision of the application chart.
 |`string`
-|`"v3.4.0"`
+|`"v3.7.0"`
 |no
 
 |[[input_helm_values]] <<input_helm_values,helm_values>>
