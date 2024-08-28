@@ -12,7 +12,6 @@ locals {
       defaultSettings = {
         backupTarget                      = var.enable_pv_backups ? format("s3://%s@%s/", var.backup_storage.bucket_name, var.backup_storage.region) : ""
         backupTargetCredentialSecret      = var.enable_pv_backups ? "longhorn-s3-secret" : ""
-        defaultLonghornStaticStorageClass = var.enable_pv_backups && var.set_default_storage_class ? "longhorn-backup" : "longhorn-static"
         storageOverProvisioningPercentage = var.storage_over_provisioning_percentage
         storageMinimalAvailablePercentage = var.storage_minimal_available_percentage
         taintToleration                   = join(";", local.tolerations_list)
