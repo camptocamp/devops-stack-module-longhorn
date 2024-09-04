@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.8.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.7.0...v3.8.0) (2024-09-04)
+
+
+### Features
+
+* move recurring jobs to their own resources ([4a441d2](https://github.com/camptocamp/devops-stack-module-longhorn/commit/4a441d2a659d37d7ad695370152d28153e798226))
+
+
+### Bug Fixes
+
+* remove attribute causing issues when bootstrapping cluster ([57c311d](https://github.com/camptocamp/devops-stack-module-longhorn/commit/57c311d960a04fe8c460b69c7cc42bd62a410906))
+
 ## [3.7.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.6.0...v3.7.0) (2024-08-20)
 
 
