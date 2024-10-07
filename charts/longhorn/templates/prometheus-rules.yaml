@@ -82,7 +82,7 @@ spec:
         description: {{"Longhorn instance manager {{$labels.instance_manager}} on {{$labels.node}} has CPU Usage / CPU request is {{$value}}% for more than 5 minutes."}}
         summary: {{"Longhorn instance manager {{$labels.instance_manager}} on {{$labels.node}} has CPU Usage / CPU request is over 300%."}}
       expr: (longhorn_instance_manager_cpu_usage_millicpu/longhorn_instance_manager_cpu_requests_millicpu) * 100 > 300
-      for: 5m
+      for: 1d
       labels:
         severity: warning
         {{- with $.Values.servicemonitor.additionalAlertLabels }}
