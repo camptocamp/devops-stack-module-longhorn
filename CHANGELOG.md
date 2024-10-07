@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.9.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.8.0...v3.9.0) (2024-10-07)
+
+
+### Features
+
+* **rules:** remove LonghornVolumeActualSpaceUsedWarning ([8d17364](https://github.com/camptocamp/devops-stack-module-longhorn/commit/8d173642b92af46b1fd23e1d866bacd136e27210))
+
 ## [3.8.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.7.0...v3.8.0) (2024-09-04)
 
 
