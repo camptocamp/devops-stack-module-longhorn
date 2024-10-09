@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.9.0...v4.0.0) (2024-10-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* point the Argo CD provider to the new repository ([#44](https://github.com/camptocamp/devops-stack-module-longhorn/issues/44))
+
+### Features
+
+* point the Argo CD provider to the new repository ([#44](https://github.com/camptocamp/devops-stack-module-longhorn/issues/44)) ([9cd1936](https://github.com/camptocamp/devops-stack-module-longhorn/commit/9cd1936d56b42cc725c8da777ef03220080a2e95))
+
 ## [3.9.0](https://github.com/camptocamp/devops-stack-module-longhorn/compare/v3.8.0...v3.9.0) (2024-10-07)
 
 
