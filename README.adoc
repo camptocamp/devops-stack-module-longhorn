@@ -1,6 +1,6 @@
 = devops-stack-module-longhorn
 // Document attributes to replace along the document
-:longhorn-chart-version: 1.7.0
+:longhorn-chart-version: 1.7.2
 :original-repo-url: https://github.com/longhorn/longhorn
 
 A https://devops-stack.io[DevOps Stack] module to deploy and configure https://longhorn.io/[Longhorn].
